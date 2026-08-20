@@ -350,7 +350,7 @@
     margin-bottom:18px;
   }
   .strip figure{margin:0;padding:16px 16px 0;background:#fff;}
-  .strip img{width:100%;height:auto;display:block;}
+  .strip img,.strip video{width:100%;height:auto;display:block;background:#fff;}
   .strip figcaption{
     font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
     color:#6b7682;padding:11px 0 13px;text-align:center;
@@ -819,7 +819,7 @@
     <article class="feature">
       <div class="shots">
         <figure>
-          <video class="loop" loop muted playsinline preload="none" poster="assets/loop_br_poster.webp"
+          <video class="loop" loop muted playsinline autoplay preload="none" poster="assets/loop_br_poster.webp"
                  data-src="assets/loop_br.mp4"></video>
           <figcaption><span class="es">La unión, al pinchar</span><span class="en">The connection, on pick</span></figcaption>
         </figure>
@@ -865,7 +865,7 @@
     <article class="feature flip">
       <div class="shots">
         <figure>
-          <video class="loop" loop muted playsinline preload="none" poster="assets/loop_ba_poster.webp"
+          <video class="loop" loop muted playsinline autoplay preload="none" poster="assets/loop_ba_poster.webp"
                  data-src="assets/loop_ba.mp4"></video>
           <figcaption><span class="es">La barandilla, al pinchar</span><span class="en">The railing, on pick</span></figcaption>
         </figure>
@@ -1068,7 +1068,9 @@
 
     <div class="strip">
       <figure>
-        <img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAKABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwC5jaTg0uT61IQMmkwK8hnUCk460U9RxRVIR//Z) center/cover no-repeat" src="assets/chapa.webp" alt="Vista en planta de un piso de chapa lagrimada en Tekla: las chapas divididas en piezas fabricables, las filas de taladros de fijación y las ranuras en los bordes">
+        <video class="loop" loop muted playsinline autoplay preload="none" poster="assets/loop_chapa_poster.webp"
+               data-src="assets/loop_chapa.mp4"
+               aria-label="Animación de una planta de chapa lagrimada en Tekla: primero la chapa entera, después dividida en piezas fabricables, y por último con sus ranuras y taladros"></video>
         <figcaption><span class="es">Una planta entera resuelta por tres herramientas: chapas divididas, ranuras y taladros repartidos.</span><span class="en">One whole floor resolved by three tools: plates split, slots and holes laid out.</span></figcaption>
       </figure>
     </div>
@@ -1436,20 +1438,39 @@
     // se queda la imagen fija.
     var quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
     var bucles = [].slice.call(document.querySelectorAll('video.loop'));
-    if (!quieto && bucles.length && 'IntersectionObserver' in window){
+
+    function arrancar(v){
+      if (!v.src) v.src = v.getAttribute('data-src');
+      var intento = v.play();
+      if (!intento || !intento.catch) return;
+      intento.catch(function(){
+        // con preload="none" puede no haber datos todavía: se reintenta al llegar,
+        // y si tampoco entonces, al menos se deja el control de reproducción
+        v.addEventListener('loadeddata', function(){
+          var otro = v.play();
+          if (otro && otro.catch) otro.catch(function(){ v.controls = true; });
+        }, { once: true });
+      });
+    }
+
+    if (quieto){
+      // quien pide menos movimiento no recibe animación automática, pero sí
+      // la posibilidad de verla: se le dan los controles
+      bucles.forEach(function(v){
+        v.autoplay = false;
+        v.controls = true;
+        if (!v.src) v.src = v.getAttribute('data-src');
+      });
+    } else if (bucles.length && 'IntersectionObserver' in window){
       var vigia = new IntersectionObserver(function(entradas){
         entradas.forEach(function(e){
-          var v = e.target;
-          if (e.isIntersecting){
-            if (!v.src) v.src = v.getAttribute('data-src');
-            var pr = v.play();
-            if (pr && pr.catch) pr.catch(function(){});
-          } else if (!v.paused){
-            v.pause();
-          }
+          if (e.isIntersecting) arrancar(e.target);
+          else if (!e.target.paused) e.target.pause();
         });
-      }, { rootMargin: '200px' });
+      }, { rootMargin: '300px' });
       bucles.forEach(function(v){ vigia.observe(v); });
+    } else {
+      bucles.forEach(arrancar);
     }
 
     document.addEventListener('keydown', function(e){
