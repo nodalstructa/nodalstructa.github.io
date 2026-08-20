@@ -1,0 +1,1397 @@
+<title>Nodal Structa</title>
+<style>
+  /* ---------- tokens: light (drafting sheet) ---------- */
+  :root{
+    --ink:        #101720;
+    --ink-soft:   #47535f;
+    --ink-faint:  #7b8794;
+    --ground:     #e9ecf0;
+    --surface:    #ffffff;
+    --surface-2:  #f3f5f8;
+    --accent:     #0b6e9e;   /* acero */
+    --accent-2:   #084f73;
+    --rust:       #b8601c;   /* minio de imprimación */
+    --rule:       #c3c9d2;
+    --rule-soft:  #dde1e7;
+    --shadow:     0 1px 2px rgba(16,23,32,.06), 0 8px 24px -12px rgba(16,23,32,.18);
+    --grid:       rgba(16,23,32,.045);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:        #e3e9f0;
+      --ink-soft:   #a3b0bd;
+      --ink-faint:  #74828f;
+      --ground:     #0c1219;
+      --surface:    #141c25;
+      --surface-2:  #1a232e;
+      --accent:     #56aada;
+      --accent-2:   #8ccbee;
+      --rust:       #e0954f;
+      --rule:       #2c3844;
+      --rule-soft:  #222c37;
+      --shadow:     0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+      --grid:       rgba(227,233,240,.05);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:        #e3e9f0;
+    --ink-soft:   #a3b0bd;
+    --ink-faint:  #74828f;
+    --ground:     #0c1219;
+    --surface:    #141c25;
+    --surface-2:  #1a232e;
+    --accent:     #56aada;
+    --accent-2:   #8ccbee;
+    --rust:       #e0954f;
+    --rule:       #2c3844;
+    --rule-soft:  #222c37;
+    --shadow:     0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+    --grid:       rgba(227,233,240,.05);
+  }
+
+  /* ---------- type ---------- */
+  :root{
+    --display: "Bahnschrift","DIN Alternate","Archivo Narrow","Roboto Condensed","Helvetica Neue",system-ui,sans-serif;
+    --body: "Segoe UI Variable Text","Segoe UI",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+    --mono: "Cascadia Mono",Consolas,ui-monospace,"SF Mono",Menlo,monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--ground);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size:32px 32px;
+    color:var(--ink);
+    font-family:var(--body);
+    font-size:16px;
+    line-height:1.6;
+  }
+
+  /* ---------- language switching ---------- */
+  .en{display:none;}
+  :root[data-lang="en"] .es{display:none;}
+  :root[data-lang="en"] .en{display:revert;}
+
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px 96px;}
+
+  /* ---------- title block ---------- */
+  .sheet{
+    background:var(--surface);
+    border:1px solid var(--rule);
+    box-shadow:var(--shadow);
+    margin-top:40px;
+  }
+  .titleblock{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:24px;
+    align-items:start;
+    padding:36px 36px 28px;
+    border-bottom:1px solid var(--rule);
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--rust);
+    margin:0 0 14px;
+  }
+  h1{
+    font-family:var(--display);
+    font-stretch:87.5%;
+    font-weight:600;
+    font-size:clamp(34px,5.4vw,60px);
+    line-height:1.02;
+    letter-spacing:-.005em;
+    margin:0 0 18px;
+    text-wrap:balance;
+  }
+  h1 .thin{
+    display:block;color:var(--ink-soft);font-weight:400;
+    font-size:.54em;line-height:1.15;margin-top:.16em;
+  }
+  .lede{
+    font-size:clamp(16px,1.6vw,18.5px);
+    color:var(--ink-soft);
+    max-width:60ch;
+    margin:0;
+  }
+  .lede strong{color:var(--ink);font-weight:600;}
+
+  .langswitch{display:flex;gap:0;border:1px solid var(--rule);}
+  .langswitch button{
+    font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+    padding:7px 12px;border:0;background:transparent;color:var(--ink-faint);
+    cursor:pointer;
+  }
+  .langswitch button[aria-pressed="true"]{background:var(--accent);color:#fff;}
+  .langswitch button:focus-visible{outline:2px solid var(--rust);outline-offset:2px;}
+
+  /* sheet metadata strip — like a drawing's revision bar */
+  .meta{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    border-top:0;
+  }
+  .meta div{
+    padding:14px 18px;
+    border-right:1px solid var(--rule-soft);
+    border-bottom:1px solid var(--rule);
+  }
+  .meta div:last-child{border-right:0;}
+  .meta dt{
+    font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-faint);margin:0 0 5px;
+  }
+  .meta dd{margin:0;font-family:var(--display);font-stretch:87.5%;font-size:19px;font-weight:600;}
+
+  .contactbar{
+    display:flex;flex-wrap:wrap;gap:10px 28px;align-items:center;
+    padding:18px 36px;
+  }
+  .contactbar > span{font-family:var(--mono);font-size:12.5px;color:var(--ink-faint);}
+  .contactbar .copy{
+    display:inline-flex;align-items:baseline;gap:9px;
+    background:transparent;border:0;padding:0;cursor:pointer;font:inherit;
+    color:var(--accent);
+  }
+  .contactbar .copy .addr{font-weight:600;border-bottom:1px solid currentColor;}
+  .contactbar .copy .hint{
+    font-family:var(--mono);font-size:10px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--ink-faint);
+  }
+  .contactbar .copy:hover{color:var(--rust);}
+  .copy:focus-visible{outline:2px solid var(--rust);outline-offset:3px;}
+  .copy.done .hint{color:var(--rust);}
+
+  .ctarow{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;}
+  .ctamail{
+    font-family:var(--mono);font-size:14px;color:var(--ink-soft);
+    user-select:all;-webkit-user-select:all;
+  }
+
+  /* ---------- sections ---------- */
+  section{margin-top:64px;}
+  .sechead{display:flex;align-items:baseline;gap:16px;margin-bottom:8px;}
+  .sechead h2{
+    font-family:var(--display);font-stretch:87.5%;font-weight:600;
+    font-size:clamp(23px,2.7vw,31px);margin:0;letter-spacing:-.005em;
+  }
+  .sechead .num{
+    font-family:var(--mono);font-size:11px;color:var(--rust);
+    letter-spacing:.1em;padding-top:4px;
+  }
+  .sechead::after{content:"";flex:1;height:1px;background:var(--rule);align-self:center;}
+  .secsub{color:var(--ink-soft);max-width:68ch;margin:0 0 28px;}
+
+  /* ---------- services band ---------- */
+  .services{
+    display:grid;grid-template-columns:minmax(0,36fr) minmax(0,64fr);
+    background:var(--surface);border:1px solid var(--rule);box-shadow:var(--shadow);
+  }
+  .services .shot{
+    margin:0;padding:20px 20px 0;background:#fff;
+    display:flex;flex-direction:column;justify-content:center;
+    border-right:1px solid var(--rule);min-width:0;
+  }
+  .services .shot img{max-width:100%;height:auto;display:block;margin:0 auto;}
+  .services .shot figcaption{
+    font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+    color:#6b7682;padding:11px 0 13px;text-align:center;
+  }
+  .services .list{display:flex;flex-direction:column;min-width:0;}
+  .services .list > div{padding:24px 30px;}
+  .services .list > div + div{border-top:1px solid var(--rule-soft);}
+  .services h4{
+    font-family:var(--display);font-stretch:87.5%;font-weight:600;font-size:19px;
+    margin:0 0 8px;
+  }
+  .services p{margin:0;font-size:14.8px;color:var(--ink-soft);}
+
+  /* ---------- project gallery ---------- */
+  .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;}
+  .prj{
+    margin:0;background:var(--surface);border:1px solid var(--rule);
+    box-shadow:var(--shadow);display:flex;flex-direction:column;min-width:0;
+  }
+  .prj .box{
+    background:#fff;border-bottom:1px solid var(--rule);
+    position:relative;min-width:0;
+  }
+  /* one slide per image; the track scroll-snaps and the dots below drive it */
+  .prj .track{
+    display:flex;overflow-x:auto;scroll-snap-type:x mandatory;
+    scrollbar-width:none;-ms-overflow-style:none;
+  }
+  .prj .track::-webkit-scrollbar{display:none;}
+  .prj .slide{
+    flex:0 0 100%;scroll-snap-align:center;
+    aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;
+    padding:14px;min-width:0;
+  }
+  .prj .slide img{max-width:100%;max-height:100%;width:auto;height:auto;display:block;}
+  .prj .dots{
+    display:flex;justify-content:center;gap:7px;
+    padding:0 0 12px;background:#fff;
+  }
+  .prj .dots button{
+    width:8px;height:8px;padding:0;border-radius:50%;cursor:pointer;
+    border:1px solid #9aa4af;background:transparent;
+  }
+  .prj .dots button[aria-current="true"]{background:#47535f;border-color:#47535f;}
+  .prj .dots button:focus-visible{outline:2px solid var(--rust);outline-offset:2px;}
+  .prj .count{
+    position:absolute;top:10px;right:10px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+    color:#fff;background:rgba(16,23,32,.6);padding:3px 7px;
+    font-variant-numeric:tabular-nums;pointer-events:none;
+  }
+  .prj .nav{
+    position:absolute;top:0;bottom:0;width:44px;z-index:2;
+    display:flex;align-items:center;justify-content:center;
+    border:0;background:transparent;padding:0;cursor:pointer;
+  }
+  .prj .nav.prev{left:0;}
+  .prj .nav.next{right:0;}
+  .prj .nav i{
+    display:flex;align-items:center;justify-content:center;
+    width:30px;height:30px;
+    background:rgba(16,23,32,.62);border:1px solid rgba(255,255,255,.32);
+    color:#fff;opacity:.5;transition:opacity .15s;
+  }
+  .prj:hover .nav i,.prj .nav:focus-visible i{opacity:1;}
+  .prj .nav[disabled]{cursor:default;}
+  .prj .nav[disabled] i{opacity:.15;}
+  .prj .nav:focus-visible{outline:2px solid var(--rust);outline-offset:-4px;}
+  .chev{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;
+        stroke-linecap:round;stroke-linejoin:round;}
+  .prj .slide img,.feature figure img,
+  .services .shot img,.strip img{cursor:zoom-in;}
+
+  /* ---------- lightbox ---------- */
+  .lightbox{
+    position:fixed;inset:0;z-index:10000;display:none;
+    align-items:center;justify-content:center;
+    background:rgba(8,12,17,.95);
+  }
+  .lightbox.open{display:flex;}
+  .lightbox img{
+    max-width:92vw;max-height:86vh;width:auto;height:auto;display:block;
+    background:#fff;
+  }
+  .lb-btn{
+    position:absolute;display:flex;align-items:center;justify-content:center;
+    width:40px;height:40px;padding:0;cursor:pointer;
+    color:#fff;background:rgba(16,23,32,.7);border:1px solid rgba(255,255,255,.35);
+  }
+  .lb-btn:hover{background:rgba(16,23,32,.95);}
+  .lb-btn:focus-visible{outline:2px solid var(--rust);outline-offset:2px;}
+  .lb-btn[disabled]{opacity:.2;cursor:default;}
+  /* the author display rules above outrank the UA sheet, so [hidden] needs saying */
+  .lb-btn[hidden],.lb-count[hidden]{display:none;}
+  .lb-close{top:clamp(12px,2.5vw,26px);right:clamp(12px,2.5vw,26px);}
+  .lb-prev{left:clamp(12px,2.5vw,26px);top:50%;transform:translateY(-50%);}
+  .lb-next{right:clamp(12px,2.5vw,26px);top:50%;transform:translateY(-50%);}
+  .lb-count{
+    position:absolute;bottom:clamp(12px,2.5vw,26px);left:50%;transform:translateX(-50%);
+    font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#fff;
+    background:rgba(16,23,32,.7);padding:5px 11px;font-variant-numeric:tabular-nums;
+  }
+  .prj figcaption{padding:16px 20px 18px;display:flex;flex-direction:column;gap:6px;}
+  .prj figcaption b{
+    font-family:var(--display);font-stretch:87.5%;font-weight:600;
+    font-size:18px;color:var(--ink);
+  }
+  /* only the description spans — not the language spans nested inside <b> */
+  .prj figcaption > span{font-size:14px;color:var(--ink-soft);}
+
+  /* ---------- wide evidence strip ---------- */
+  .strip{
+    background:var(--surface);border:1px solid var(--rule);box-shadow:var(--shadow);
+    margin-bottom:18px;
+  }
+  .strip figure{margin:0;padding:16px 16px 0;background:#fff;}
+  .strip img{width:100%;height:auto;display:block;}
+  .strip figcaption{
+    font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+    color:#6b7682;padding:11px 0 13px;text-align:center;
+  }
+
+  /* ---------- featured tools ---------- */
+  .feature{
+    display:grid;grid-template-columns:minmax(0,41fr) minmax(0,59fr);gap:0;
+    background:var(--surface);border:1px solid var(--rule);
+    box-shadow:var(--shadow);margin-bottom:24px;
+  }
+  .feature + .feature{margin-top:0;}
+  .feature .shots{
+    display:flex;flex-direction:column;
+    border-left:1px solid var(--rule);min-width:0;
+  }
+  .feature figure{
+    margin:0;padding:18px 18px 0;background:#fff;
+    display:flex;flex-direction:column;min-width:0;flex:1;
+    justify-content:center;
+  }
+  .feature figure + figure{border-top:1px solid var(--rule);}
+  .feature figure img{max-width:100%;height:auto;display:block;margin:0 auto;}
+  .feature figure video{width:100%;height:auto;display:block;background:#000;}
+
+  /* Video expand. The artifact viewer's sandbox blocks the native fullscreen
+     API, so the built-in fullscreen control is hidden and replaced by a button
+     that tries fullscreen first and otherwise blows the clip up inside the page. */
+  video::-webkit-media-controls-fullscreen-button{display:none;}
+  .vwrap{position:relative;}
+  .expand{
+    position:absolute;top:9px;right:9px;
+    display:flex;align-items:center;justify-content:center;
+    width:32px;height:32px;padding:0;
+    color:#fff;background:rgba(16,23,32,.72);border:1px solid rgba(255,255,255,.35);
+    cursor:pointer;opacity:.55;transition:opacity .15s;
+  }
+  .expand svg{
+    width:17px;height:17px;
+    fill:none;stroke:currentColor;stroke-width:2;
+    stroke-linecap:round;stroke-linejoin:round;
+  }
+  /* label kept for screen readers only — the icon carries it visually */
+  .sr{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+    overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;
+  }
+  .vwrap:hover .expand,.expand:focus-visible{opacity:1;}
+  .expand:focus-visible{outline:2px solid var(--rust);outline-offset:2px;}
+  .vwrap.zoomed{
+    position:fixed;inset:0;z-index:9999;margin:0;
+    background:rgba(8,12,17,.95);
+    display:flex;align-items:center;justify-content:center;padding:clamp(12px,3vw,40px);
+  }
+  .vwrap.zoomed video{width:auto;max-width:100%;max-height:100%;}
+  .vwrap.zoomed .expand{top:clamp(12px,3vw,40px);right:clamp(12px,3vw,40px);opacity:1;}
+  body.noscroll{overflow:hidden;}
+  @media (prefers-reduced-motion:reduce){.expand{transition:none;}}
+  /* the figure ground is white in both themes, so this caption is
+     deliberately pinned to a grey that reads on white */
+  .feature figcaption{
+    font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+    color:#6b7682;padding:11px 0 13px;text-align:center;
+  }
+  .feature .body{padding:28px 30px;min-width:0;}
+  .feature.flip .shots{order:-1;border-left:0;border-right:1px solid var(--rule);}
+
+  .mark{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--ink-faint);margin-bottom:12px;
+  }
+  .mark b{
+    background:var(--accent);color:#fff;font-weight:600;
+    padding:2px 7px;letter-spacing:.1em;
+  }
+  .mark .plg{background:var(--accent);}
+  .mark .mac{background:var(--rust);}
+  .mark .app{background:var(--ink-soft);}
+  .mark .gh{background:var(--accent-2);}
+
+  .subhead{
+    font-family:var(--display);font-stretch:87.5%;font-weight:600;
+    font-size:clamp(19px,2.1vw,23px);margin:44px 0 8px;letter-spacing:-.005em;
+    padding-top:20px;border-top:1px solid var(--rule);
+  }
+  h3{
+    font-family:var(--display);font-stretch:87.5%;font-weight:600;
+    font-size:24px;margin:0 0 10px;letter-spacing:-.005em;
+  }
+  .feature p, .tool p{margin:0 0 14px;color:var(--ink-soft);font-size:15.2px;}
+  .specs{
+    list-style:none;padding:0;margin:0;
+    border-top:1px solid var(--rule-soft);
+  }
+  .specs li{
+    display:grid;grid-template-columns:118px 1fr;gap:14px;
+    padding:7px 0;border-bottom:1px solid var(--rule-soft);
+    font-size:13.4px;
+  }
+  .specs b{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-faint);font-weight:400;padding-top:3px;
+  }
+  .specs span{font-variant-numeric:tabular-nums;}
+
+  /* ---------- tool grid ---------- */
+  .tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:18px;}
+  .tool{
+    background:var(--surface);border:1px solid var(--rule);
+    padding:22px 22px 18px;box-shadow:var(--shadow);
+    display:flex;flex-direction:column;
+  }
+  .tool h3{font-size:20px;}
+  .tool p{font-size:14.4px;margin-bottom:12px;}
+  .tool .tag{
+    margin-top:auto;font-family:var(--mono);font-size:11px;
+    color:var(--ink-faint);border-top:1px solid var(--rule-soft);padding-top:11px;
+  }
+
+  /* ---------- capability list ---------- */
+  .caps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0;
+    background:var(--surface);border:1px solid var(--rule);box-shadow:var(--shadow);}
+  .caps > div{padding:24px 26px;border-right:1px solid var(--rule-soft);border-bottom:1px solid var(--rule-soft);}
+  .caps h4{
+    font-family:var(--display);font-stretch:87.5%;font-weight:600;font-size:17.5px;
+    margin:0 0 9px;
+  }
+  .caps p{margin:0;font-size:14.4px;color:var(--ink-soft);}
+
+  /* ---------- cta ---------- */
+  .cta{
+    background:var(--surface);border:1px solid var(--rule);
+    border-left:4px solid var(--rust);
+    padding:36px;box-shadow:var(--shadow);
+  }
+  .cta h2{font-family:var(--display);font-stretch:87.5%;font-weight:600;font-size:clamp(24px,3vw,34px);margin:0 0 12px;}
+  .cta p{color:var(--ink-soft);max-width:62ch;margin:0 0 22px;}
+  .btn{
+    display:inline-block;background:var(--rust);color:#fff;
+    font-family:var(--display);font-stretch:87.5%;font-weight:600;font-size:17px;
+    padding:12px 26px;text-decoration:none;border:1px solid transparent;
+    cursor:pointer;
+  }
+  .btn:hover{background:var(--ink);}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+  .btn.done{background:var(--accent);}
+
+  footer{
+    margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);
+    font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);
+    display:flex;flex-wrap:wrap;gap:8px 26px;
+  }
+
+  @media (max-width:820px){
+    .services{grid-template-columns:1fr;}
+    .services .shot{border-right:0;border-bottom:1px solid var(--rule);}
+    .services .list > div{padding:22px;}
+    .feature{grid-template-columns:1fr;}
+    .feature .shots{border-left:0;border-top:1px solid var(--rule);}
+    .feature.flip .shots{order:0;border-right:0;border-top:1px solid var(--rule);}
+    .titleblock{grid-template-columns:1fr;padding:28px 22px 22px;}
+    .contactbar{padding:16px 22px;}
+    .feature .body{padding:24px 22px;}
+    .wrap{padding:0 14px 72px;}
+    .specs li{grid-template-columns:1fr;gap:2px;}
+  }
+
+  .fade{opacity:0;transform:translateY(8px);animation:rise .5s ease forwards;}
+  @keyframes rise{to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion:reduce){.fade{animation:none;opacity:1;transform:none;}}
+</style>
+
+<div class="wrap">
+
+  <div class="sheet fade">
+    <div class="titleblock">
+      <div>
+        <p class="eyebrow">
+          <span class="es">Automatización · Detallado · Cálculo estructural</span>
+          <span class="en">Automation · Detailing · Structural analysis</span>
+        </p>
+        <h1>
+          <span class="es">Nodal Structa<span class="thin">Detallado, cálculo y automatización de estructuras</span></span>
+          <span class="en">Nodal Structa<span class="thin">Structural detailing, analysis and automation</span></span>
+        </h1>
+        <p class="lede">
+          <span class="es">Diseño y cálculo de estructuras metálicas y hormigón armado y automatización con herramientas a medida que ahorran a una oficina técnica
+          el trabajo que hoy repite a mano: uniones atornilladas, corte y despiece de chapas de piso, barandillas.</span>
+          <span class="en">Steel and concrete structures analysis &amp; design, and automation of custom tools that save a detailing office the work it repeats by hand
+          today: bolted connections, plate splitting, railings.</span>
+        </p>
+      </div>
+      <div class="langswitch" role="group" aria-label="Idioma / Language">
+        <button type="button" data-lang="es" aria-pressed="true">ES</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+
+    <dl class="meta">
+      <div>
+        <dt><span class="es">Herramientas</span><span class="en">Tools built</span></dt>
+        <dd>20</dd>
+      </div>
+      <div>
+        <dt><span class="es">Versiones Tekla</span><span class="en">Tekla versions</span></dt>
+        <dd>2020 – 2026</dd>
+      </div>
+      <div>
+        <dt><span class="es">Herramientas de</span><span class="en">Built with</span></dt>
+        <dd>C# · Grasshopper</dd>
+      </div>
+      <div>
+        <dt><span class="es">Idiomas</span><span class="en">Languages</span></dt>
+        <dd>ES · EN</dd>
+      </div>
+      <div>
+        <dt><span class="es">Modalidad</span><span class="en">Engagement</span></dt>
+        <dd><span class="es">Remoto</span><span class="en">Remote</span></dd>
+      </div>
+    </dl>
+
+    <div class="contactbar">
+      <button type="button" class="copy" data-copy="nodalstructa@gmail.com">
+        <span class="addr">nodalstructa@gmail.com</span>
+        <span class="hint" aria-hidden="true"><span class="es">copiar</span><span class="en">copy</span></span>
+      </button>
+      <span class="es">Presupuesto cerrado por herramienta o por horas</span>
+      <span class="en">Fixed price per tool, or hourly</span>
+    </div>
+  </div>
+
+  <section>
+    <div class="sechead">
+      <span class="num">01</span>
+      <h2><span class="es">3 en 1</span><span class="en">3 in 1</span></h2>
+    </div>
+    <p class="secsub">
+      <span class="es">Combinamos la capacidad de calcular, modelar y programar, y eso es justo lo que hace falta para automatizar bien: hay que
+      haber sufrido el detalle antes de poder automatizarlo.</span>
+      <span class="en">We combine the ability to calculate, model, and program, and that’s exactly what’s needed to automate effectively: you have to have experienced detailing firsthand before you can automate it properly.</span>
+    </p>
+
+    <div class="services">
+      <figure class="shot">
+        <img loading="lazy" decoding="async" src="assets/band.jpg" alt="Modelo Tekla de la planta de mortero seco de Bulgaria: torre de estructura metálica de varias plantas junto a un edificio anexo">
+        <figcaption><span class="es">Planta de mortero seco en Bulgaria</span><span class="en">Dry mortar plant in Bulgaria</span></figcaption>
+      </figure>
+      <div class="list">
+        <div>
+          <h4><span class="es">Detallado de estructura metálica</span><span class="en">Steel detailing</span></h4>
+          <p><span class="es">Modelo completo en Tekla Structures, planos de arreglo, fabricación y montaje: naves, 			estructuras
+          industriales, escaleras, pasarelas y barandillas. Trabajamos con diferentes estándares: perfiles, clases, series 		de numeración y entregamos lo que el taller necesita para fabricar.</span>
+          <span class="en">Full Tekla Structures model plus arrangement, shop and erection drawings: industrial buildings 		and plants,
+          stairs, walkways and railings. We work to different standards: profiles, classes and numbering series, and deliver
+          what the shop needs to fabricate.</span></p>
+        </div>
+        <div>
+          <h4><span class="es">Cálculo estructural</span><span class="en">Structural analysis</span></h4>
+          <p><span class="es">Dimensionado y comprobación de la estructura y sus uniones.</span>
+          <span class="en">Sizing and checking of the structure and its connections.</span></p>
+        </div>
+        <div>
+          <h4><span class="es">Automatización a medida</span><span class="en">Custom automation</span></h4>
+          <p><span class="es">El modelador repite el mismo detalle cientos de veces por proyecto: la misma
+          unión, el mismo reparto de taladros, la misma barandilla. Una herramienta que hace ese detalle en un
+          clic se paga en el primer proyecto y sigue trabajando en todos los siguientes.</span>
+          <span class="en">A modeller repeats the same detail hundreds of times per project: the same
+          connection, the same hole spacing, the same railing. A tool that produces it in one click pays for
+          itself on the first project and keeps working on every one after it.</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sechead">
+      <span class="num">02</span>
+      <h2><span class="es">Componentes destacados</span><span class="en">Selected components</span></h2>
+    </div>
+    <p class="secsub">
+      <span class="es">Componentes paramétricos completos, con diálogo, valores por defecto,
+      icono en el catálogo de Tekla Structures, funcionamiento igual que una componente de sistema.</span>
+      <span class="en">Complete parametric components, including a dialog, default values, and an icon in the Tekla 	Structures catalog, with the same functionality as a native system component.</span>
+    </p>
+
+    <article class="feature">
+      <div class="shots">
+        <figure>
+          <img loading="lazy" decoding="async" src="assets/bracket.png" alt="Unión pilar–correa: chapa plegada angular con rigidizador y tornillos, modelada en Tekla Structures">
+          <figcaption><span class="es">Resultado en el modelo</span><span class="en">Result in the model</span></figcaption>
+        </figure>
+        <figure>
+          <div class="vwrap">
+            <video controls playsinline preload="none" poster="assets/poster.jpg">
+              <source src="assets/video.mp4" type="video/mp4">
+            </video>
+            <button type="button" class="expand">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M9 4H4v5M15 4h5v5M20 15v5h-5M4 15v5h5"/>
+              </svg>
+              <span class="sr es">Ampliar</span><span class="sr en">Expand</span>
+            </button>
+          </div>
+          <figcaption><span class="es">Componente en uso</span><span class="en">Component in use</span></figcaption>
+        </figure>
+      </div>
+      <div class="body">
+        <p class="mark"><b class="plg">PLG</b> <span class="es">Plugin de sistema</span><span class="en">System plugin</span></p>
+        <h3>Bracket</h3>
+        <p>
+          <span class="es">Une un pilar con una o dos correas en una sola operación. Genera la placa plegada angular,
+          el rigidizador y los tornillos, con todos los parámetros expuestos en un diálogo propio
+          que se guarda como atributo estándar.</span>
+          <span class="en">Connects a column to one or two purlins in a single operation. Generates the angular bended
+          plate, stiffener and bolts, with every parameter exposed in its own dialog that
+          saves as a standard Tekla attribute set.</span>
+        </p>
+        <ul class="specs">
+          <li><b><span class="es">Tipo</span><span class="en">Type</span></b><span class="es">Componente de sistema en el catálogo</span><span class="en">System component in the catalogue</span></li>
+          <li><b><span class="es">Genera</span><span class="en">Creates</span></b><span class="es">Placa plegada · Rigidizador · Tornillos</span><span class="en">Bended plate · Stiffener · Bolts</span></li>
+          <li><b><span class="es">Diálogo</span><span class="en">Dialog</span></b><span class="es">WinForms, atributos guardables y reutilizables</span><span class="en">WinForms, saveable reusable attributes</span></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="feature flip">
+      <div class="shots">
+        <figure>
+          <img loading="lazy" decoding="async" src="assets/dlg_barandillas.png" alt="Barandilla acotada en Tekla mostrando los perfiles Ø42.4×3, Ø33.7×3, L60×6 y PL100×4, junto al diálogo de parámetros del componente">
+          <figcaption><span class="es">Resultado en el modelo</span><span class="en">Labelled profiles and parameter dialog</span></figcaption>
+        </figure>
+        <figure>
+          <div class="vwrap">
+            <video controls playsinline preload="none" poster="assets/poster_bar.jpg">
+              <source src="assets/video_bar.mp4" type="video/mp4">
+            </video>
+            <button type="button" class="expand">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M9 4H4v5M15 4h5v5M20 15v5h-5M4 15v5h5"/>
+              </svg>
+              <span class="sr es">Ampliar</span><span class="sr en">Expand</span>
+            </button>
+          </div>
+          <figcaption><span class="es">Componente en uso</span><span class="en">Component in use</span></figcaption>
+        </figure>
+      </div>
+      <div class="body">
+        <p class="mark"><b class="plg">PLG</b> <span class="es">Plugin de sistema · detalle</span><span class="en">System plugin · detail</span></p>
+        <h3><span class="es">Barandillas</span><span class="en">Railings</span></h3>
+        <p>
+          <span class="es">Crea una barandilla entera sobre una viga o una cadena de vigas a partir de un punto:
+          reparte los montantes, resuelve los codos y las placas de base con componentes de sistema, y adapta
+          los extremos. Funciona también en zancas de escalera, girando automáticamente los angulares según
+          el sentido de subida.</span>
+          <span class="en">Builds the whole railing along a beam or chain of beams from a single pick: spaces
+          the posts, resolves elbows and base plates using system components, and adapts the ends. It also
+          works on stair stringers, automatically rotating the angle posts to match the direction of rise.</span>
+        </p>
+        <ul class="specs">
+          <li><b><span class="es">Montantes</span><span class="en">Posts</span></b><span>L60×6 · max. 1250 mm</span></li>
+          <li><b><span class="es">Tubos</span><span class="en">Rails</span></b><span>Ø42.4×3 · Ø33.7×3</span></li>
+          <li><b><span class="es">Rodapié</span><span class="en">Toe plate</span></b><span class="es">Pletina 100×4, opcional</span><span class="en">Flat 100×4, optional</span></li>
+          <li><b><span class="es">Alturas</span><span class="en">Heights</span></b><span>1100 / 500 mm</span></li>
+        </ul>
+      </div>
+    </article>
+  </section>
+
+  <section>
+    <div class="sechead">
+      <span class="num">03</span>
+      <h2><span class="es">Trabajos destacados</span><span class="en">Selected work</span></h2>
+    </div>
+    <p class="secsub">
+      <span class="es">Estructuras metálicas y de hormigón armado, edificios de procesos, silos de almacenamiento, cubiertas y naves industriales.</span>
+      <span class="en">Steel and concrete structures, process buildings, storage silos, roofs and industriales sheds.</span>
+    </p>
+
+    <div class="gallery">
+
+      <figure class="prj">
+        <div class="box">
+          <div class="track">
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/bul1.jpg" alt="Modelo Tekla de la planta de proceso en Bulgaria: torre de estructura metálica de varias plantas junto a un edificio anexo, sobre losa de cimentación"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/bul2.jpg" alt="La misma planta vista desde el lado opuesto, con los forjados y los arriostramientos en cruz"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/bul3.jpg" alt="La planta con los equipos y silos interiores montados dentro de la estructura"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/bul4.jpg" alt="Vista del conjunto con los silos interiores y las plataformas de mantenimiento"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/bul5.jpg" alt="Render del edificio acabado, con sus cerramientos, la torre de elevación y el terreno"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/bul6.jpg" alt="El edificio acabado desde el lado de carga, con el anexo, la torre de elevación y los equipos bajo la estructura"></div>
+          </div>
+        </div>
+        <figcaption>
+          <b><span class="es">Planta de mortero seco · Bulgaria</span><span class="en">Dry mortar plant · Bulgaria</span></b>
+          <span class="es">Edificio principal de 14 x 13 metros y 44 metros de altura que soporta 36 silos metálicos.</span>
+          <span class="en">Main building measuring 14 x 13 meters and 44 meters high, supporting 36 steel silos.</span>
+        </figcaption>
+      </figure>
+
+      <figure class="prj">
+        <div class="box">
+          <div class="track">
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/pell1.jpg" alt="Modelo Tekla de una planta de pelletizado en Reino Unido: estructura de proceso de varias plantas con forjados, arriostramientos en cruz y escaleras"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/pell2.jpg" alt="La misma planta desde otro ángulo, con la plataforma de equipos y el acceso lateral"></div>
+          </div>
+        </div>
+        <figcaption>
+          <b><span class="es">Planta de peletización · Reino Unido</span><span class="en">Pelletizing plant · UK</span></b>
+          <span class="es">Estructura de proceso de varias plantas: forjados, arriostramientos, escaleras y plataformas de equipos.</span>
+          <span class="en">Multi-storey process structure: floors, bracing, stairs and equipment platforms.</span>
+        </figcaption>
+      </figure>
+
+      <figure class="prj">
+        <div class="box">
+          <div class="track">
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/kat1.jpg" alt="Modelo Tekla de la planta de mortero seco de Katowice: torre de proceso de gran altura con naves anexas"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/kat2.jpg" alt="La planta desde otro ángulo, con el muelle de carga y las estructuras auxiliares"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/kat3.jpg" alt="La torre con los silos de almacenamiento montados en su interior"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/kat4.jpg" alt="Vista del conjunto con los cerramientos y los equipos de proceso"></div>
+          </div>
+        </div>
+        <figcaption>
+          <b><span class="es">Planta de mortero seco · Katowice, Polonia</span><span class="en">Dry mortar plant · Katowice, Poland</span></b>
+          <span class="es">Edificio principal de 17 x 12 metros y 60 metros de altura que soporta 52 silos metálicos.</span>
+          <span class="en">Main building measuring 17 x 12 meters and 60 meters high, supporting 52 steel silos.</span>
+        </figcaption>
+      </figure>
+
+      <figure class="prj">
+        <div class="box">
+          <div class="track">
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/mar1.jpg" alt="Modelo Tekla del silo de hormigón armado en Marruecos: cuerpo de hormigón sobre pilares, con estructura metálica en cubierta y torre de escaleras"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/mar2.jpg" alt="El mismo silo con todo el armado visible: la malla de armadura de muros, pilares y losa"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/mar3.jpg" alt="Vista en planta del armado de la losa de cimentación, con la parrilla y los arranques de pilares"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/mar4.jpg" alt="Detalle del armado: cercos y armadura longitudinal en el encuentro de losa y muros"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/mar5.jpg" alt="Detalle del armado en el cruce de vigas y pilares de hormigón"></div>
+          </div>
+        </div>
+        <figcaption>
+          <b><span class="es">Silo de hormigón armado · Marruecos</span><span class="en">Reinforced concrete silo · Morocco</span></b>
+          <span class="es">Silo de hormigón armado con estructura metálica: losa de cimentación, pilares y muros, con el armado detallado barra a barra y despiece para fabricación.</span>
+          <span class="en">Reinforced concrete silo with a steel structure: foundation slab, columns and walls, with reinforcement detailed bar by bar and scheduled for fabrication.</span>
+        </figcaption>
+      </figure>
+
+      <figure class="prj">
+        <div class="box">
+          <div class="track">
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/gal1.jpg" alt="Modelo Tekla de la torre de proceso Galaxie Biojet: seis niveles de plataformas con escaleras, barandillas, arriostramientos y cimentación"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/gal2.jpg" alt="La misma torre desde otro ángulo, con la plataforma inferior y los arranques de pilares"></div>
+          </div>
+        </div>
+        <figcaption>
+          <b>Galaxie Biojet · <span class="es">Francia</span><span class="en">France</span></b>
+          <span class="es">Torre de proceso de seis niveles, con escaleras, barandillas y arriostramientos completo.</span>
+          <span class="en">Six-level process tower with stairs, railings and full bracing.</span>
+        </figcaption>
+      </figure>
+
+      <figure class="prj">
+        <div class="box">
+          <div class="track">
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/kem1.jpg" alt="Modelo Tekla de los silos: dos silos cilíndricos sobre estructura de soporte arriostrada, con tolva, pasarela superior y torre de escaleras"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/kem2.jpg" alt="Los mismos silos desde otro ángulo, con la tolva y el anillo de la pasarela superior"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/kem3.jpg" alt="Armado de la losa de cimentación de los silos: parrilla de armadura, refuerzos perimetrales y arranques de pilares"></div>
+          </div>
+        </div>
+        <figcaption>
+          <b><span class="es">Silos para almacenaje de cenizas · Marruecos</span><span class="en">Ash storage silos · Morocco</span></b>
+          <span class="es">Silos de almacenaje de cenizas sobre estructura arriostrada, con tolva, pasarela superior y torre de escaleras. Incluye el armado de la losa de cimentación.</span>
+          <span class="en">Ash storage silos on a braced support structure, with hopper, top walkway and stair tower. Includes the foundation slab reinforcement.</span>
+        </figcaption>
+      </figure>
+
+      <figure class="prj">
+        <div class="box">
+          <div class="track">
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/cas1.jpg" alt="Modelo Tekla de la cubierta Castillejo: cerchas metálicas paralelas sobre pilares, con correas y arriostramiento de cubierta"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/cas2.jpg" alt="Alzado de la cercha tipo, con montantes y diagonales acotados"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/cas3.jpg" alt="Alzado de la fachada lateral, con los pórticos y el arriostramiento"></div>
+          </div>
+        </div>
+        <figcaption>
+          <b><span class="es">Cubierta metálica · Castillejo</span><span class="en">Steel roof · Castillejo</span></b>
+          <span class="es">Cubierta metálica sobre cerchas, con correas y arriostramiento en el plano de cubierta. Con el despiece de la cercha tipo y la fachada lateral.</span>
+          <span class="en">Truss roof with purlins and roof-plane bracing, plus the typical truss and the side elevation.</span>
+        </figcaption>
+      </figure>
+
+      <figure class="prj">
+        <div class="box">
+          <div class="track">
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/ali1.jpg" alt="Modelo Tekla de una nave industrial en Alicante con cubierta curva, pórticos, correas y arriostramiento de fachada"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/ali2.jpg" alt="La misma nave desde el otro extremo, con el hastial y el arriostramiento de fachada"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/ali3.jpg" alt="Vista del conjunto con la solera y los pórticos de cubierta curva"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/ali4.jpg" alt="Alzado del pórtico tipo de cubierta curva"></div>
+            <div class="slide"><img loading="lazy" decoding="async" src="assets/ali5.jpg" alt="Planta de cubierta con el reparto de correas y los arriostramientos"></div>
+          </div>
+        </div>
+        <figcaption>
+          <b><span class="es">Nave industrial · Alicante</span><span class="en">Industrial shed · Alicante</span></b>
+          <span class="es">Nave de cubierta curva: pórticos, correas y arriostramiento de fachada, con el pórtico tipo y la planta de cubierta.</span>
+          <span class="en">Curved-roof shed: portal frames, purlins and wall bracing, with the typical frame and the roof plan.</span>
+        </figcaption>
+      </figure>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sechead">
+      <span class="num">04</span>
+      <h2><span class="es">Catálogo completo</span><span class="en">Full catalogue</span></h2>
+    </div>
+    <p class="secsub">
+      <span class="es">Una selección del resto, de componentes paramétricos a utilidades de productividad y
+      control de calidad. <b>PLG</b> plugin de sistema · <b>MAC</b> macro del catálogo · <b>APP</b> aplicación ·
+      <b>GH</b> definición de Grasshopper.</span>
+      <span class="en">A selection of the rest, from parametric components to productivity and QA utilities.
+      <b>PLG</b> system plugin · <b>MAC</b> catalogue macro · <b>APP</b> application ·
+      <b>GH</b> Grasshopper definition.</span>
+    </p>
+
+    <div class="strip">
+      <figure>
+        <img loading="lazy" decoding="async" src="assets/chapa.png" alt="Vista en planta de un piso de chapa lagrimada en Tekla: las chapas divididas en piezas fabricables, las filas de taladros de fijación y las ranuras en los bordes">
+        <figcaption><span class="es">Una planta entera resuelta por tres herramientas: chapas divididas, ranuras y taladros repartidos.</span><span class="en">One whole floor resolved by three tools: plates split, slots and holes laid out.</span></figcaption>
+      </figure>
+    </div>
+
+    <div class="tools">
+
+      <article class="tool">
+        <p class="mark"><b class="mac">MAC</b></p>
+        <h3><span class="es">Taladros en chapa lagrimada</span><span class="en">Checker plate hole patterns</span></h3>
+        <p>
+          <span class="es">Reparte los taladros de fijación de una chapa lagrimada a lo largo de las vigas
+          que tiene debajo. Comprueba cada posición contra el sólido real de la chapa, así que no perfora
+          sobre huecos ni cortes, y agrupa los taladros consecutivos en grupos limpios. Diámetro y
+          separación son parámetros.</span>
+          <span class="en">Lays out the fixing holes of a checker plate along the beams beneath it. Every
+          position is tested against the plate's real solid, so it never drills over openings or cuts, and
+          consecutive holes are merged into clean groups. Diameter and spacing are parameters.</span>
+        </p>
+        <p class="tag"><span class="es">Sólidos · detección de cortes</span><span class="en">Solids · cut detection</span></p>
+      </article>
+
+      <article class="tool">
+        <p class="mark"><b class="mac">MAC</b></p>
+        <h3><span class="es">Ranuras en chapa lagrimada</span><span class="en">Checker plate slots</span></h3>
+        <p>
+          <span class="es">Crea las ranuras de una o varias chapas de una pasada. Cachea la geometría de cada
+          chapa para no repetir la consulta más cara de la API, de modo que aguanta selecciones grandes sin
+          bloquear Tekla.</span>
+          <span class="en">Creates the slots on one or many plates in a single pass. It caches each plate's
+          geometry to avoid repeating the API's most expensive call, so it handles large selections without
+          freezing Tekla.</span>
+        </p>
+        <p class="tag"><span class="es">Optimizado para lotes grandes</span><span class="en">Optimised for large batches</span></p>
+      </article>
+
+      <article class="tool">
+        <p class="mark"><b class="mac">MAC</b></p>
+        <h3><span class="es">División de chapa lagrimada</span><span class="en">Checker plate splitting</span></h3>
+        <p>
+          <span class="es">Parte una chapa grande en piezas fabricables respetando el formato máximo de
+          suministro y apoyando los cortes en las vigas de debajo, para que ninguna junta quede al aire.</span>
+          <span class="en">Splits a large plate into fabricable pieces within the maximum supply format,
+          landing every cut on a beam below so no joint is left unsupported.</span>
+        </p>
+        <p class="tag"><span class="es">Distribuido como instalador TSEP</span><span class="en">Shipped as a TSEP installer</span></p>
+      </article>
+
+      <article class="tool">
+        <p class="mark"><b class="app">APP</b></p>
+        <h3><span class="es">Mover coordenadas</span><span class="en">Move to coordinates</span></h3>
+        <p>
+          <span class="es">Lleva vigas, pilares, polivigas y chapas a una cota exacta en X, Y o Z. Sustituye a
+          la función <i>Move Absolute</i> de Get Moving, con ventana no modal que se queda abierta junto al
+          modelo, lectura de la cota de una pieza para aplicarla a otras, y coordenadas globales o del plano
+          de trabajo.</span>
+          <span class="en">Moves beams, columns, polybeams and plates to an exact X, Y or Z coordinate.
+          A replacement for Get Moving's <i>Move Absolute</i>, with a modeless window that stays open beside
+          the model, the ability to read one part's coordinate and apply it to others, and a global or
+          work-plane coordinate mode.</span>
+        </p>
+        <p class="tag"><span class="es">Ajustes persistentes · instalador PowerShell</span><span class="en">Persistent settings · PowerShell installer</span></p>
+      </article>
+
+      <article class="tool">
+        <p class="mark"><b class="mac">MAC</b></p>
+        <h3><span class="es">Rigidizadores de pórtico</span><span class="en">Portal frame stiffeners</span></h3>
+        <p>
+          <span class="es">Añade los rigidizadores a las conexiones de pórtico ya montadas: recorre las
+          conexiones seleccionadas, localiza sus chapas y coloca el rigidizador que le corresponde a cada una.</span>
+          <span class="en">Adds stiffeners to existing portal frame connections: walks the selected
+          connections, finds their plates and places the matching stiffener on each one.</span>
+        </p>
+        <p class="tag"><span class="es">Trabaja sobre componentes existentes</span><span class="en">Operates on existing components</span></p>
+      </article>
+
+      <article class="tool">
+        <p class="mark"><b class="mac">MAC</b></p>
+        <h3><span class="es">Unión columna–viga soldada</span><span class="en">Welded column–beam joint</span></h3>
+        <p>
+          <span class="es">Resuelve la unión soldada pinchando columna y viga, y vuelve a pedir la siguiente
+          pareja sin cerrarse: se encadenan decenas de uniones sin tocar el ratón fuera del modelo.</span>
+          <span class="en">Resolves the welded joint by picking column then beam, and immediately asks for the
+          next pair without closing: dozens of joints chained without leaving the model view.</span>
+        </p>
+        <p class="tag"><span class="es">Sin ventana, todo desde el modelo</span><span class="en">No window, driven from the model</span></p>
+      </article>
+
+      <article class="tool">
+        <p class="mark"><b class="mac">MAC</b></p>
+        <h3><span class="es">Soldadura (44)</span><span class="en">Weld (44)</span></h3>
+        <p>
+          <span class="es">Variante de unión soldada sobre perfiles, encadenable igual que la anterior y
+          empaquetada como instalador para desplegarla en todos los puestos de la oficina.</span>
+          <span class="en">A welded joint variant on profiles, chainable like the one above and packaged as an
+          installer for rollout to every workstation in the office.</span>
+        </p>
+        <p class="tag"><span class="es">Distribuido como instalador TSEP</span><span class="en">Shipped as a TSEP installer</span></p>
+      </article>
+
+      <article class="tool">
+        <p class="mark"><b class="mac">MAC</b></p>
+        <h3><span class="es">Tornillería de pisos</span><span class="en">Flooring bolts</span></h3>
+        <p>
+          <span class="es">Coloca la tornillería de los pisos tomando el gramil correcto de una tabla que cubre
+          las series UPN, IPN, IPE, HEA y HEB completas. El modelador no consulta el prontuario: la herramienta
+          ya lo sabe.</span>
+          <span class="en">Places flooring bolts using the correct gauge from a table covering the complete
+          UPN, IPN, IPE, HEA and HEB series. The modeller never opens the handbook — the tool already knows.</span>
+        </p>
+        <p class="tag"><span class="es">Prontuario de gramiles incorporado</span><span class="en">Built-in gauge tables</span></p>
+      </article>
+
+      <article class="tool">
+        <p class="mark"><b class="app">APP</b></p>
+        <h3><span class="es">Comparador visual de planos</span><span class="en">Drawing revision comparer</span></h3>
+        <p>
+          <span class="es">Compara el plano que se envió a taller con el plano actual y marca en rojo lo que ha
+          cambiado. Control de revisiones sin leer dos PDF en paralelo: evita que salga a fabricación una
+          versión que ya no es la buena.</span>
+          <span class="en">Compares the drawing sent to the shop against the current one and marks what changed.
+          Revision control without reading two PDFs side by side: it stops a superseded version reaching
+          fabrication.</span>
+        </p>
+        <p class="tag">Python · <span class="es">proceso por lotes</span><span class="en">batch processing</span></p>
+      </article>
+
+    </div>
+
+    <h3 class="subhead">
+      <span class="es">En Grasshopper</span><span class="en">In Grasshopper</span>
+    </h3>
+    <p class="secsub">
+      <span class="es">Definiciones que actúan sobre un modelo de Tekla ya empezado y hacen de golpe lo que
+      a mano se hace pieza a pieza. Es la vía rápida cuando el criterio cambia de un proyecto a otro y no
+      compensa compilar un componente.</span>
+      <span class="en">Definitions that act on an already-started Tekla model and do in one pass what is
+      otherwise done part by part. This is the quick route when the rule changes from project to project and
+      compiling a component isn't worth it.</span>
+    </p>
+
+    <div class="tools">
+
+      <article class="tool">
+        <p class="mark"><b class="gh">GH</b></p>
+        <h3><span class="es">Uniones atornilladas en masa</span><span class="en">Bolted connections in bulk</span></h3>
+        <p>
+          <span class="es">Aplica las uniones de catálogo a todo el modelo de una pasada: chapa de testa,
+          placa de anclaje, tapajuntas, cartelas de arriostrado, empalmes de tubo, pilar soldado con
+          rigidizadores. Los criterios se pueden leer de una hoja de Excel, así que la tabla de uniones del
+          proyecto se convierte directamente en modelo.</span>
+          <span class="en">Applies catalogue connections across the whole model in one pass: end plates, base
+          plates, splice covers, bracing gussets, tube splices, welded columns with stiffeners. The rules can
+          be read from an Excel sheet, so the project's connection schedule turns straight into model.</span>
+        </p>
+        <p class="tag"><span class="es">Lectura de Excel · uniones por lotes</span><span class="en">Excel-driven · batch connections</span></p>
+      </article>
+
+      <article class="tool">
+        <p class="mark"><b class="gh">GH</b></p>
+        <h3><span class="es">Clasificar y nombrar</span><span class="en">Classify and name</span></h3>
+        <p>
+          <span class="es">Recorre el modelo y pone a cada pieza el nombre y la clase que le tocan según lo
+          que es: arriostrado, tubo, escalera, vigueta o viga. Es lo que hace que los listados, los filtros y
+          los planos salgan coherentes sin repasarlos a mano.</span>
+          <span class="en">Walks the model and gives every part the name and class it should have according to
+          what it is: bracing, tube, stair, joist or beam. This is what makes reports, filters and drawings
+          come out consistent without a manual pass.</span>
+        </p>
+        <p class="tag"><span class="es">Coherencia de listados y filtros</span><span class="en">Consistent reports and filters</span></p>
+      </article>
+
+      <article class="tool">
+        <p class="mark"><b class="gh">GH</b></p>
+        <h3><span class="es">Arriostrados</span><span class="en">Bracing</span></h3>
+        <p>
+          <span class="es">Baja los puntos de inicio y final de los arriostrados hasta las vigas a las que
+          acometen, para que la barra muera donde debe, y resuelve la placa soldada del encuentro.</span>
+          <span class="en">Drops the start and end points of bracing members down onto the beams they frame
+          into, so each member ends where it should, and resolves the welded gusset at the joint.</span>
+        </p>
+        <p class="tag"><span class="es">Ajuste de ejes y placa soldada</span><span class="en">Axis snapping and gusset plate</span></p>
+      </article>
+
+      <article class="tool">
+        <p class="mark"><b class="gh">GH</b></p>
+        <h3><span class="es">División de barras</span><span class="en">Member splitting</span></h3>
+        <p>
+          <span class="es">Parte vigas y tubos por dos puntos, en varias piezas a la vez, o los arriostrados
+          por su mitad. Los puntos de corte pueden venir de un campo de usuario, así que el despiece de
+          transporte se define una vez y se aplica a todo el modelo.</span>
+          <span class="en">Splits beams and tubes at two points, many at a time, or bracing members at their
+          midpoint. Cut points can come from a user field, so the transport split is defined once and applied
+          across the model.</span>
+        </p>
+        <p class="tag"><span class="es">Despiece por lotes</span><span class="en">Batch splitting</span></p>
+      </article>
+
+      <article class="tool">
+        <p class="mark"><b class="gh">GH</b></p>
+        <h3><span class="es">Numeración</span><span class="en">Numbering</span></h3>
+        <p>
+          <span class="es">Aplica la serie de numeración del proyecto a las piezas y conjuntos según su tipo,
+          sin ir marcando a mano grupo por grupo antes de lanzar la numeración de Tekla.</span>
+          <span class="en">Applies the project's numbering series to parts and assemblies by type, instead of
+          tagging group after group by hand before running Tekla's numbering.</span>
+        </p>
+        <p class="tag"><span class="es">Series por tipo de pieza</span><span class="en">Series by part type</span></p>
+      </article>
+
+      <article class="tool">
+        <p class="mark"><b class="gh">GH</b></p>
+        <h3><span class="es">Excavación</span><span class="en">Excavation</span></h3>
+        <p>
+          <span class="es">Genera el vaciado de las zapatas con el talud que toque — 45° o 2:3 — a partir de
+          la cimentación ya modelada. Sirve para medir el movimiento de tierras sin dibujarlo aparte.</span>
+          <span class="en">Generates the excavation around footings at the required slope — 45° or 2:3 — from
+          the foundations already modelled. Useful for quantifying earthworks without drawing them separately.</span>
+        </p>
+        <p class="tag"><span class="es">Taludes 45° y 2:3</span><span class="en">45° and 2:3 slopes</span></p>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sechead">
+      <span class="num">05</span>
+      <h2><span class="es">Lo que hacemos</span><span class="en">What we build</span></h2>
+    </div>
+    <div class="caps">
+      <div>
+        <h4><span class="es">Componentes paramétricos</span><span class="en">Parametric components</span></h4>
+        <p><span class="es">Plugins de sistema que aparecen en el catálogo como cualquier componente nativo, con
+        diálogo propio, atributos guardables, iconos y recálculo al modificar la geometría.</span>
+        <span class="en">System plugins that appear in the catalogue like any native component, with their own
+        dialog, saveable attribute sets, icons and recalculation when geometry changes.</span></p>
+      </div>
+      <div>
+        <h4><span class="es">Geometría y sólidos</span><span class="en">Geometry and solids</span></h4>
+        <p><span class="es">Cálculo sobre la geometría real de las piezas: intersecciones, detección de cortes y
+        huecos, orientación automática según la dirección de la pieza, planos de trabajo.</span>
+        <span class="en">Work on the real solid geometry of parts: intersections, cut and opening detection,
+        automatic orientation from part direction, work planes.</span></p>
+      </div>
+      <div>
+        <h4><span class="es">Herramientas de productividad</span><span class="en">Productivity tools</span></h4>
+        <p><span class="es">Utilidades que operan sobre la selección del modelador, con ventanas que conviven con
+        Tekla sin bloquearlo y ajustes que se recuerdan entre sesiones.</span>
+        <span class="en">Utilities that act on the modeller's selection, with windows that coexist with Tekla
+        without blocking it, and settings remembered between sessions.</span></p>
+      </div>
+      <div>
+        <h4><span class="es">Diseño paramétrico en Grasshopper</span><span class="en">Parametric design in Grasshopper</span></h4>
+        <p><span class="es">Geometría que no encaja en un componente de Tekla: superficies regladas, mallas,
+        repartos que dependen de una curva. Se define en Grasshopper y se baja al modelo como piezas reales.</span>
+        <span class="en">Geometry that will not fit a Tekla component: ruled surfaces, meshes, layouts driven
+        by a curve. Defined in Grasshopper and brought down into the model as real parts.</span></p>
+      </div>
+      <div>
+        <h4><span class="es">Despliegue en toda la oficina</span><span class="en">Office-wide deployment</span></h4>
+        <p><span class="es">Instaladores TSEP y scripts de instalación para llevar la herramienta a todos los
+        puestos y a varias versiones de Tekla, no solo a la máquina de quien la pidió.</span>
+        <span class="en">TSEP installers and install scripts to roll a tool out to every workstation and across
+        several Tekla versions, not just the machine of whoever asked for it.</span></p>
+      </div>
+      <div>
+        <h4><span class="es">Control de calidad</span><span class="en">Quality control</span></h4>
+        <p><span class="es">Comprobaciones automáticas sobre el modelo y los planos para detectar antes de
+        fabricación lo que hoy se detecta en el taller.</span>
+        <span class="en">Automated checks over the model and drawings, catching before fabrication what today
+        gets caught in the shop.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="cta">
+      <h2><span class="es">¿Qué detalle repiten cada semana?</span><span class="en">What detail do you repeat every week?</span></h2>
+      <p>
+        <span class="es">Cuéntanoslo y lo automatizamos.</span>
+        <span class="en">Tell us about it and we'll automate it.</span>
+      </p>
+      <div class="ctarow">
+        <button type="button" class="btn copy" data-copy="nodalstructa@gmail.com">
+          <span class="es">Copiar correo</span><span class="en">Copy email</span>
+        </button>
+        <span class="ctamail">nodalstructa@gmail.com</span>
+      </div>
+    </div>
+
+    <footer>
+      <span>Jorge Antunez Gil</span>
+      <span>nodalstructa@gmail.com</span>
+      <span class="es">Tekla Structures 2020 – 2026 · Open API · C# / .NET · Grasshopper</span>
+      <span class="en">Tekla Structures 2020 – 2026 · Open API · C# / .NET · Grasshopper</span>
+    </footer>
+  </section>
+
+</div>
+
+<script>
+  (function(){
+    var btns = document.querySelectorAll('.langswitch button');
+    btns.forEach(function(b){
+      b.addEventListener('click', function(){
+        var lang = b.getAttribute('data-lang');
+        document.documentElement.setAttribute('data-lang', lang);
+        btns.forEach(function(o){
+          o.setAttribute('aria-pressed', o === b ? 'true' : 'false');
+        });
+      });
+    });
+
+    // mailto: navigation is blocked inside the artifact sandbox, so the
+    // address is copied instead — and stays visible as selectable text.
+    function legacyCopy(text){
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly','');
+      ta.style.cssText = 'position:fixed;top:-1000px;opacity:0;';
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try{ ok = document.execCommand('copy'); }catch(e){ ok = false; }
+      document.body.removeChild(ta);
+      return ok;
+    }
+
+    document.querySelectorAll('.copy').forEach(function(btn){
+      var label = btn.querySelector('.hint') || btn;
+      var original = label.innerHTML;
+      function confirm(ok){
+        var es = ok ? 'Copiado' : 'Selecciónalo abajo';
+        var en = ok ? 'Copied' : 'Select it below';
+        label.innerHTML = '<span class="es">'+es+'</span><span class="en">'+en+'</span>';
+        btn.classList.add('done');
+        setTimeout(function(){
+          label.innerHTML = original;
+          btn.classList.remove('done');
+        }, 2200);
+      }
+      btn.addEventListener('click', function(){
+        var text = btn.getAttribute('data-copy');
+        if (navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(text).then(function(){
+            confirm(true);
+          }, function(){
+            confirm(legacyCopy(text));
+          });
+        } else {
+          confirm(legacyCopy(text));
+        }
+      });
+    });
+
+    // Enlarge a clip. Native fullscreen is tried first — it works when the page
+    // is served on its own — and the in-page overlay covers the artifact viewer,
+    // whose sandbox rejects the fullscreen request.
+    function overlayOn(wrap){
+      wrap.classList.add('zoomed');
+      document.body.classList.add('noscroll');
+    }
+    function overlayOff(wrap){
+      wrap.classList.remove('zoomed');
+      document.body.classList.remove('noscroll');
+    }
+    function closeAny(){
+      document.querySelectorAll('.vwrap.zoomed').forEach(overlayOff);
+    }
+
+    document.querySelectorAll('.vwrap').forEach(function(wrap){
+      var video = wrap.querySelector('video');
+      var btn = wrap.querySelector('.expand');
+      if (!video || !btn) return;
+
+      btn.addEventListener('click', function(){
+        if (wrap.classList.contains('zoomed')){ overlayOff(wrap); return; }
+        if (document.fullscreenElement){ document.exitFullscreen(); return; }
+        var req = video.requestFullscreen || video.webkitRequestFullscreen;
+        if (req){
+          try{
+            var r = req.call(video);
+            if (r && r.catch){ r.catch(function(){ overlayOn(wrap); }); }
+            return;
+          }catch(e){ /* falls through to the overlay */ }
+        }
+        overlayOn(wrap);
+      });
+
+      // clicking the dark surround closes; clicking the video itself does not
+      wrap.addEventListener('click', function(e){
+        if (e.target === wrap && wrap.classList.contains('zoomed')) overlayOff(wrap);
+      });
+    });
+
+    document.addEventListener('keydown', function(e){
+      var abierta = lb.classList.contains('open');
+      if (e.key === 'Escape'){
+        if (abierta) lbClose();
+        closeAny();
+        return;
+      }
+      if (!abierta) return;
+      if (e.key === 'ArrowLeft'){ e.preventDefault(); lbShow(lbAt - 1); }
+      if (e.key === 'ArrowRight'){ e.preventDefault(); lbShow(lbAt + 1); }
+    });
+
+    // ---- lightbox, shared by every project image ----
+    var CHEV_L = '<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+    var CHEV_R = '<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
+    var CROSS  = '<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+    var lb = document.createElement('div');
+    lb.className = 'lightbox';
+    lb.innerHTML =
+      '<button type="button" class="lb-btn lb-prev" aria-label="Anterior">' + CHEV_L + '</button>' +
+      '<img alt="">' +
+      '<button type="button" class="lb-btn lb-next" aria-label="Siguiente">' + CHEV_R + '</button>' +
+      '<button type="button" class="lb-btn lb-close" aria-label="Cerrar">' + CROSS + '</button>' +
+      '<span class="lb-count"></span>';
+    document.body.appendChild(lb);
+
+    var lbImg = lb.querySelector('img');
+    var lbPrev = lb.querySelector('.lb-prev');
+    var lbNext = lb.querySelector('.lb-next');
+    var lbCount = lb.querySelector('.lb-count');
+    var lbSet = [];
+    var lbAt = 0;
+
+    function lbShow(i){
+      lbAt = Math.min(Math.max(i, 0), lbSet.length - 1);
+      var src = lbSet[lbAt];
+      lbImg.src = src.getAttribute('src');
+      lbImg.alt = src.getAttribute('alt') || '';
+      var solo = lbSet.length < 2;
+      lbPrev.hidden = solo;
+      lbNext.hidden = solo;
+      lbPrev.disabled = lbAt === 0;
+      lbNext.disabled = lbAt === lbSet.length - 1;
+      lbCount.textContent = solo ? '' : (lbAt + 1) + ' / ' + lbSet.length;
+      lbCount.hidden = solo;
+    }
+    function lbOpen(imgs, i){
+      lbSet = imgs;
+      lbShow(i);
+      lb.classList.add('open');
+      document.body.classList.add('noscroll');
+      lb.querySelector('.lb-close').focus();
+    }
+    function lbClose(){
+      lb.classList.remove('open');
+      document.body.classList.remove('noscroll');
+      lbImg.removeAttribute('src');
+    }
+    lbPrev.addEventListener('click', function(){ lbShow(lbAt - 1); });
+    lbNext.addEventListener('click', function(){ lbShow(lbAt + 1); });
+    lb.querySelector('.lb-close').addEventListener('click', lbClose);
+    lb.addEventListener('click', function(e){ if (e.target === lb) lbClose(); });
+
+    // Each card's own images travel together in the lightbox, so the arrows there
+    // move within that project or component and never wander into another one.
+    function conectarAmpliacion(tarjeta, selector){
+      var imgs = [].slice.call(tarjeta.querySelectorAll(selector));
+      imgs.forEach(function(img, i){
+        img.addEventListener('click', function(){ lbOpen(imgs, i); });
+      });
+    }
+    document.querySelectorAll('.prj').forEach(function(card){
+      conectarAmpliacion(card, '.slide img');
+    });
+    document.querySelectorAll('.feature').forEach(function(card){
+      conectarAmpliacion(card, '.shots figure img');
+    });
+    document.querySelectorAll('.services').forEach(function(card){
+      conectarAmpliacion(card, '.shot img');
+    });
+    document.querySelectorAll('.strip').forEach(function(card){
+      conectarAmpliacion(card, 'img');
+    });
+
+    // Project sliders. Dots, arrows and the counter are built here rather than
+    // written into the markup, so adding or removing a slide needs no other edit.
+    document.querySelectorAll('.prj .box').forEach(function(box){
+      var track = box.querySelector('.track');
+      if (!track) return;
+      var slides = track.querySelectorAll('.slide');
+      if (slides.length < 2) return;
+
+      var count = document.createElement('span');
+      count.className = 'count';
+      box.appendChild(count);
+
+      function irA(i){
+        i = Math.min(Math.max(i, 0), slides.length - 1);
+        track.scrollTo({ left: slides[i].offsetLeft - track.offsetLeft, behavior: 'smooth' });
+        setActive(i);
+      }
+      var prev = document.createElement('button');
+      prev.type = 'button';
+      prev.className = 'nav prev';
+      prev.setAttribute('aria-label', 'Imagen anterior');
+      prev.innerHTML = '<i>' + CHEV_L + '</i>';
+      prev.addEventListener('click', function(){ irA(actual - 1); });
+      var next = document.createElement('button');
+      next.type = 'button';
+      next.className = 'nav next';
+      next.setAttribute('aria-label', 'Imagen siguiente');
+      next.innerHTML = '<i>' + CHEV_R + '</i>';
+      next.addEventListener('click', function(){ irA(actual + 1); });
+      box.appendChild(prev);
+      box.appendChild(next);
+      var actual = 0;
+
+      var dots = document.createElement('div');
+      dots.className = 'dots';
+      var buttons = [];
+      slides.forEach(function(slide, i){
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('aria-label', 'Imagen ' + (i + 1) + ' de ' + slides.length);
+        // marked straight away rather than waiting for the scroll to settle,
+        // so the control responds even where scroll events are throttled
+        b.addEventListener('click', function(){ irA(i); });
+        dots.appendChild(b);
+        buttons.push(b);
+      });
+      box.parentNode.insertBefore(dots, box.nextSibling);
+
+      function setActive(i){
+        actual = i;
+        buttons.forEach(function(b, j){
+          b.setAttribute('aria-current', j === i ? 'true' : 'false');
+        });
+        count.textContent = (i + 1) + ' / ' + slides.length;
+        prev.disabled = i === 0;
+        next.disabled = i === slides.length - 1;
+      }
+      function sync(){
+        var w = track.clientWidth;
+        if (!w) return;
+        var i = Math.round(track.scrollLeft / w);
+        setActive(Math.min(Math.max(i, 0), slides.length - 1));
+      }
+      sync();
+
+      // keeps the dots honest when the reader swipes or drags the track itself
+      track.addEventListener('scroll', sync, { passive: true });
+      addEventListener('resize', sync);
+    });
+  })();
+</script>
