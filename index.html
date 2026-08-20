@@ -1,4 +1,38 @@
-<title>Nodal Structa</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Componentes y plugins para Tekla Structures con Tekla Open API y C#/.NET — Nodal Structa</title>
+<meta name="description" content="Desarrollo de componentes, plugins y macros para Tekla Structures con Tekla Open API y C#/.NET, definiciones de Grasshopper, y detallado y cálculo de estructura metálica y hormigón armado.">
+<meta name="author" content="Jorge Antunez Gil">
+<meta name="theme-color" content="#0b6e9e">
+<link rel="canonical" href="https://nodalstructa.github.io/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20fill='%230b6e9e'/%3E%3Cpath%20d='M8%2024V8h3.4l9.2%2010.2V8H24v16h-3.4L11.4%2013.8V24z'%20fill='%23fff'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Nodal Structa">
+<meta property="og:url" content="https://nodalstructa.github.io/">
+<meta property="og:locale" content="es_ES">
+<meta property="og:locale:alternate" content="en_GB">
+<meta property="og:title" content="Componentes y plugins para Tekla Structures con Tekla Open API y C#/.NET — Nodal Structa">
+<meta property="og:description" content="Desarrollo de componentes, plugins y macros para Tekla Structures con Tekla Open API y C#/.NET, definiciones de Grasshopper, y detallado y cálculo de estructura metálica y hormigón armado.">
+<meta property="og:image" content="https://nodalstructa.github.io/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Modelo de Tekla Structures de una planta industrial detallada por Nodal Structa">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Nodal Structa",
+  "url": "https://nodalstructa.github.io/",
+  "email": "nodalstructa@gmail.com",
+  "founder": "Jorge Antunez Gil",
+  "description": "Desarrollo de componentes, plugins y macros para Tekla Structures con Tekla Open API y C#/.NET, definiciones de Grasshopper, y detallado y cálculo de estructura metálica y hormigón armado.",
+  "areaServed": "Remoto",
+  "availableLanguage": ["es", "en"],
+  "knowsAbout": ["Tekla Structures", "Tekla Open API", "C#", ".NET", "Grasshopper", "Detallado de estructura metálica", "Cálculo estructural"],
+  "serviceType": "Desarrollo de componentes y plugins para Tekla Structures"
+}
+</script>
 <style>
   /* ---------- tokens: light (drafting sheet) ---------- */
   :root{
@@ -176,7 +210,7 @@
   }
 
   /* ---------- sections ---------- */
-  section{margin-top:64px;}
+  section{margin-top:64px;scroll-margin-top:56px;}
   .sechead{display:flex;align-items:baseline;gap:16px;margin-bottom:8px;}
   .sechead h2{
     font-family:var(--display);font-stretch:87.5%;font-weight:600;
@@ -395,7 +429,6 @@
   }
   .mark .plg{background:var(--accent);}
   .mark .mac{background:var(--rust);}
-  .mark .app{background:var(--ink-soft);}
   .mark .gh{background:var(--accent-2);}
 
   .subhead{
@@ -464,12 +497,53 @@
   .btn:hover{background:var(--ink);}
   .btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
   .btn.done{background:var(--accent);}
+  .btn.ghost{background:transparent;color:var(--rust);border-color:var(--rule);}
+  .btn.ghost:hover{background:var(--surface-2);color:var(--ink);}
 
   footer{
     margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);
     font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);
     display:flex;flex-wrap:wrap;gap:8px 26px;
   }
+
+
+  /* ---------- section nav (sticky) ---------- */
+  .secnav{
+    position:sticky;top:0;z-index:40;display:flex;
+    background:var(--surface);border:1px solid var(--rule);border-top:0;
+    overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  }
+  .secnav::-webkit-scrollbar{display:none;}
+  .secnav a{
+    flex:0 0 auto;padding:11px 16px;text-decoration:none;white-space:nowrap;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--ink-soft);border-right:1px solid var(--rule-soft);
+  }
+  .secnav a:last-child{border-right:0;}
+  .secnav a:hover{background:var(--surface-2);color:var(--rust);}
+  .secnav a:focus-visible{outline:2px solid var(--rust);outline-offset:-2px;}
+
+  .mailto{
+    font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--rust);text-decoration:none;border:1px solid var(--rule);padding:5px 11px;
+  }
+  .mailto:hover{background:var(--rust);color:#fff;border-color:var(--rust);}
+  .mailto:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+  /* ---------- process steps ---------- */
+  .steps{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    background:var(--surface);border:1px solid var(--rule);box-shadow:var(--shadow);
+  }
+  .steps > div{padding:22px 26px;border-right:1px solid var(--rule-soft);border-bottom:1px solid var(--rule-soft);}
+  .steps .stepnum{
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--rust);
+    display:block;margin-bottom:9px;font-weight:400;
+  }
+  .steps h4{
+    font-family:var(--display);font-stretch:87.5%;font-weight:600;font-size:17.5px;margin:0 0 8px;
+  }
+  .steps p{margin:0;font-size:14.4px;color:var(--ink-soft);}
 
   @media (max-width:820px){
     .services{grid-template-columns:1fr;}
@@ -482,6 +556,8 @@
     .contactbar{padding:16px 22px;}
     .feature .body{padding:24px 22px;}
     .wrap{padding:0 14px 72px;}
+    .secnav a{padding:10px 13px;}
+    .steps > div{padding:20px 22px;}
     .specs li{grid-template-columns:1fr;gap:2px;}
   }
 
@@ -496,18 +572,22 @@
     <div class="titleblock">
       <div>
         <p class="eyebrow">
-          <span class="es">Automatización · Detallado · Cálculo estructural</span>
-          <span class="en">Automation · Detailing · Structural analysis</span>
+          <span class="es">Tekla Open API · C#/.NET · Grasshopper</span>
+          <span class="en">Tekla Open API · C#/.NET · Grasshopper</span>
         </p>
         <h1>
           <span class="es">Nodal Structa<span class="thin">Detallado, cálculo y automatización de estructuras</span></span>
           <span class="en">Nodal Structa<span class="thin">Structural detailing, analysis and automation</span></span>
         </h1>
         <p class="lede">
-          <span class="es">Diseño y cálculo de estructuras metálicas y hormigón armado y automatización con herramientas a medida que ahorran a una oficina técnica
-          el trabajo que hoy repite a mano: uniones atornilladas, corte y despiece de chapas de piso, barandillas.</span>
-          <span class="en">Steel and concrete structures analysis &amp; design, and automation of custom tools that save a detailing office the work it repeats by hand
-          today: bolted connections, plate splitting, railings.</span>
+          <span class="es">Diseño y cálculo de estructuras metálicas y de hormigón armado, combinado con el desarrollo de
+          componentes, plugins y herramientas a medida con <strong>Tekla Open API</strong>, <strong>C#/.NET</strong> y
+          <strong>Grasshopper</strong>, para automatizar tareas repetitivas de modelado y detallado: uniones atornilladas,
+          corte y despiece de chapas de piso, barandillas y otros elementos constructivos.</span>
+          <span class="en">Steel and reinforced concrete structural design and analysis, combined with the development of
+          custom components, plugins and tools with <strong>Tekla Open API</strong>, <strong>C#/.NET</strong> and
+          <strong>Grasshopper</strong>, to automate repetitive modelling and detailing tasks: bolted connections, floor
+          plate splitting and hole layouts, railings and other building elements.</span>
         </p>
       </div>
       <div class="langswitch" role="group" aria-label="Idioma / Language">
@@ -518,7 +598,7 @@
 
     <dl class="meta">
       <div>
-        <dt><span class="es">Herramientas</span><span class="en">Tools built</span></dt>
+        <dt><span class="es">Herramientas creadas</span><span class="en">Tools built</span></dt>
         <dd>20</dd>
       </div>
       <div>
@@ -526,8 +606,8 @@
         <dd>2020 – 2026</dd>
       </div>
       <div>
-        <dt><span class="es">Herramientas de</span><span class="en">Built with</span></dt>
-        <dd>C# · Grasshopper</dd>
+        <dt><span class="es">Desarrollado con</span><span class="en">Built with</span></dt>
+        <dd>C#/.NET · Open API</dd>
       </div>
       <div>
         <dt><span class="es">Idiomas</span><span class="en">Languages</span></dt>
@@ -544,12 +624,25 @@
         <span class="addr">nodalstructa@gmail.com</span>
         <span class="hint" aria-hidden="true"><span class="es">copiar</span><span class="en">copy</span></span>
       </button>
+      <a class="mailto" href="mailto:nodalstructa@gmail.com?subject=Automatización%20en%20Tekla%20Structures">
+        <span class="es">Escribir</span><span class="en">Write</span>
+      </a>
       <span class="es">Presupuesto cerrado por herramienta o por horas</span>
       <span class="en">Fixed price per tool, or hourly</span>
     </div>
   </div>
 
-  <section>
+  <nav class="secnav" aria-label="Secciones">
+    <a href="#servicios"><span class="es">Servicios</span><span class="en">Services</span></a>
+    <a href="#paraquien"><span class="es">¿Para quién?</span><span class="en">Who it is for</span></a>
+    <a href="#proceso"><span class="es">Cómo trabajamos</span><span class="en">How we work</span></a>
+    <a href="#componentes"><span class="es">Componentes</span><span class="en">Components</span></a>
+    <a href="#trabajos"><span class="es">Trabajos</span><span class="en">Work</span></a>
+    <a href="#catalogo"><span class="es">Catálogo</span><span class="en">Catalogue</span></a>
+    <a href="#contacto"><span class="es">Contacto</span><span class="en">Contact</span></a>
+  </nav>
+
+  <section id="servicios">
     <div class="sechead">
       <span class="num">01</span>
       <h2><span class="es">3 en 1</span><span class="en">3 in 1</span></h2>
@@ -592,9 +685,109 @@
     </div>
   </section>
 
-  <section>
+  <section id="paraquien">
     <div class="sechead">
       <span class="num">02</span>
+      <h2><span class="es">¿Para quién?</span><span class="en">Who it is for</span></h2>
+    </div>
+    <p class="secsub">
+      <span class="es">Trabajamos con quien vive dentro del modelo: oficinas que detallan a diario y empresas que
+      fabrican lo que sale de ese modelo.</span>
+      <span class="en">We work with the people who live inside the model: offices that detail every day and
+      companies that fabricate what comes out of that model.</span>
+    </p>
+    <div class="caps">
+      <div>
+        <h4><span class="es">Oficinas de ingeniería</span><span class="en">Engineering offices</span></h4>
+        <p><span class="es">Automatización de procesos repetitivos de modelado y detallado.</span>
+        <span class="en">Automation of repetitive modelling and detailing processes.</span></p>
+      </div>
+      <div>
+        <h4><span class="es">Empresas de estructuras metálicas</span><span class="en">Steel fabricators</span></h4>
+        <p><span class="es">Herramientas para acelerar la fabricación, los planos y la preparación del modelo.</span>
+        <span class="en">Tools that speed up fabrication, drawings and model preparation.</span></p>
+      </div>
+      <div>
+        <h4><span class="es">Detallistas Tekla</span><span class="en">Tekla detailers</span></h4>
+        <p><span class="es">Componentes y macros adaptados a sus estándares: perfiles, clases, series de
+        numeración y criterios de taller.</span>
+        <span class="en">Components and macros tailored to their own standards: profiles, classes, numbering
+        series and shop criteria.</span></p>
+      </div>
+      <div>
+        <h4><span class="es">Ingenierías industriales</span><span class="en">Industrial engineering firms</span></h4>
+        <p><span class="es">Automatización de estructuras de proceso, plataformas, escaleras, barandillas y
+        conexiones.</span>
+        <span class="en">Automation of process structures, platforms, stairs, railings and connections.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="proceso">
+    <div class="sechead">
+      <span class="num">03</span>
+      <h2><span class="es">Cómo trabajamos</span><span class="en">How we work</span></h2>
+    </div>
+    <p class="secsub">
+      <span class="es">De la tarea que hoy se hace a mano a una herramienta instalada en todos los puestos.
+      El presupuesto se cierra al terminar el paso 02, cuando ya está claro qué tiene que hacer la herramienta
+      y qué casos tiene que resolver.</span>
+      <span class="en">From the task done by hand today to a tool installed on every workstation. The price is
+      fixed at the end of step 02, once it is clear what the tool has to do and which cases it has to cover.</span>
+    </p>
+    <div class="steps">
+      <div>
+        <b class="stepnum">01</b>
+        <h4><span class="es">Detectamos la tarea repetitiva</span><span class="en">We spot the repetitive task</span></h4>
+        <p><span class="es">La empresa nos enseña qué proceso resuelve hoy a mano y cuántas veces lo repite
+        en un proyecto.</span>
+        <span class="en">The company shows us which process it resolves by hand today, and how many times it
+        repeats it in a project.</span></p>
+      </div>
+      <div>
+        <b class="stepnum">02</b>
+        <h4><span class="es">Analizamos la lógica</span><span class="en">We analyse the logic</span></h4>
+        <p><span class="es">Geometría, reglas, excepciones, parámetros y criterios de fabricación. Aquí
+        aparecen los casos raros, que son los que deciden si la herramienta sirve.</span>
+        <span class="en">Geometry, rules, exceptions, parameters and fabrication criteria. This is where the odd
+        cases surface, and they decide whether the tool is usable.</span></p>
+      </div>
+      <div>
+        <b class="stepnum">03</b>
+        <h4><span class="es">Desarrollamos la herramienta</span><span class="en">We build the tool</span></h4>
+        <p><span class="es">C#/.NET con Tekla Open API cuando el criterio es estable y merece un componente;
+        Grasshopper cuando cambia en cada proyecto.</span>
+        <span class="en">C#/.NET on the Tekla Open API when the rule is stable and deserves a component;
+        Grasshopper when it changes from project to project.</span></p>
+      </div>
+      <div>
+        <b class="stepnum">04</b>
+        <h4><span class="es">Probamos sobre modelos reales</span><span class="en">We test on real models</span></h4>
+        <p><span class="es">Validación con distintas geometrías y situaciones, sobre el modelo del propio
+        proyecto y no sobre un ejemplo de laboratorio.</span>
+        <span class="en">Validation across different geometries and situations, on the project's own model
+        rather than a laboratory example.</span></p>
+      </div>
+      <div>
+        <b class="stepnum">05</b>
+        <h4><span class="es">Entregamos e instalamos</span><span class="en">We deliver and install</span></h4>
+        <p><span class="es">TSEP, instalador y configuración para toda la oficina, en las versiones de Tekla
+        que se estén usando.</span>
+        <span class="en">TSEP, installer and configuration for the whole office, across the Tekla versions in
+        use.</span></p>
+      </div>
+      <div>
+        <b class="stepnum">06</b>
+        <h4><span class="es">Soporte y mejoras</span><span class="en">Support and improvements</span></h4>
+        <p><span class="es">Adaptación a nuevas versiones de Tekla y a lo que pida el siguiente proyecto.</span>
+        <span class="en">Adaptation to new Tekla versions and to whatever the next project asks for.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="componentes">
+    <div class="sechead">
+      <span class="num">04</span>
       <h2><span class="es">Componentes destacados</span><span class="en">Selected components</span></h2>
     </div>
     <p class="secsub">
@@ -686,9 +879,9 @@
     </article>
   </section>
 
-  <section>
+  <section id="trabajos">
     <div class="sechead">
-      <span class="num">03</span>
+      <span class="num">05</span>
       <h2><span class="es">Trabajos destacados</span><span class="en">Selected work</span></h2>
     </div>
     <p class="secsub">
@@ -827,17 +1020,17 @@
     </div>
   </section>
 
-  <section>
+  <section id="catalogo">
     <div class="sechead">
-      <span class="num">04</span>
+      <span class="num">06</span>
       <h2><span class="es">Catálogo completo</span><span class="en">Full catalogue</span></h2>
     </div>
     <p class="secsub">
       <span class="es">Una selección del resto, de componentes paramétricos a utilidades de productividad y
-      control de calidad. <b>PLG</b> plugin de sistema · <b>MAC</b> macro del catálogo · <b>APP</b> aplicación ·
+      control de calidad. <b>PLG</b> plugin de sistema · <b>MAC</b> macro del catálogo ·
       <b>GH</b> definición de Grasshopper.</span>
       <span class="en">A selection of the rest, from parametric components to productivity and QA utilities.
-      <b>PLG</b> system plugin · <b>MAC</b> catalogue macro · <b>APP</b> application ·
+      <b>PLG</b> system plugin · <b>MAC</b> catalogue macro ·
       <b>GH</b> Grasshopper definition.</span>
     </p>
 
@@ -849,21 +1042,6 @@
     </div>
 
     <div class="tools">
-
-      <article class="tool">
-        <p class="mark"><b class="mac">MAC</b></p>
-        <h3><span class="es">Taladros en chapa lagrimada</span><span class="en">Checker plate hole patterns</span></h3>
-        <p>
-          <span class="es">Reparte los taladros de fijación de una chapa lagrimada a lo largo de las vigas
-          que tiene debajo. Comprueba cada posición contra el sólido real de la chapa, así que no perfora
-          sobre huecos ni cortes, y agrupa los taladros consecutivos en grupos limpios. Diámetro y
-          separación son parámetros.</span>
-          <span class="en">Lays out the fixing holes of a checker plate along the beams beneath it. Every
-          position is tested against the plate's real solid, so it never drills over openings or cuts, and
-          consecutive holes are merged into clean groups. Diameter and spacing are parameters.</span>
-        </p>
-        <p class="tag"><span class="es">Sólidos · detección de cortes</span><span class="en">Solids · cut detection</span></p>
-      </article>
 
       <article class="tool">
         <p class="mark"><b class="mac">MAC</b></p>
@@ -889,22 +1067,6 @@
           landing every cut on a beam below so no joint is left unsupported.</span>
         </p>
         <p class="tag"><span class="es">Distribuido como instalador TSEP</span><span class="en">Shipped as a TSEP installer</span></p>
-      </article>
-
-      <article class="tool">
-        <p class="mark"><b class="app">APP</b></p>
-        <h3><span class="es">Mover coordenadas</span><span class="en">Move to coordinates</span></h3>
-        <p>
-          <span class="es">Lleva vigas, pilares, polivigas y chapas a una cota exacta en X, Y o Z. Sustituye a
-          la función <i>Move Absolute</i> de Get Moving, con ventana no modal que se queda abierta junto al
-          modelo, lectura de la cota de una pieza para aplicarla a otras, y coordenadas globales o del plano
-          de trabajo.</span>
-          <span class="en">Moves beams, columns, polybeams and plates to an exact X, Y or Z coordinate.
-          A replacement for Get Moving's <i>Move Absolute</i>, with a modeless window that stays open beside
-          the model, the ability to read one part's coordinate and apply it to others, and a global or
-          work-plane coordinate mode.</span>
-        </p>
-        <p class="tag"><span class="es">Ajustes persistentes · instalador PowerShell</span><span class="en">Persistent settings · PowerShell installer</span></p>
       </article>
 
       <article class="tool">
@@ -954,20 +1116,6 @@
           UPN, IPN, IPE, HEA and HEB series. The modeller never opens the handbook — the tool already knows.</span>
         </p>
         <p class="tag"><span class="es">Prontuario de gramiles incorporado</span><span class="en">Built-in gauge tables</span></p>
-      </article>
-
-      <article class="tool">
-        <p class="mark"><b class="app">APP</b></p>
-        <h3><span class="es">Comparador visual de planos</span><span class="en">Drawing revision comparer</span></h3>
-        <p>
-          <span class="es">Compara el plano que se envió a taller con el plano actual y marca en rojo lo que ha
-          cambiado. Control de revisiones sin leer dos PDF en paralelo: evita que salga a fabricación una
-          versión que ya no es la buena.</span>
-          <span class="en">Compares the drawing sent to the shop against the current one and marks what changed.
-          Revision control without reading two PDFs side by side: it stops a superseded version reaching
-          fabrication.</span>
-        </p>
-        <p class="tag">Python · <span class="es">proceso por lotes</span><span class="en">batch processing</span></p>
       </article>
 
     </div>
@@ -1068,9 +1216,9 @@
     </div>
   </section>
 
-  <section>
+  <section id="capacidades">
     <div class="sechead">
-      <span class="num">05</span>
+      <span class="num">07</span>
       <h2><span class="es">Lo que hacemos</span><span class="en">What we build</span></h2>
     </div>
     <div class="caps">
@@ -1119,7 +1267,7 @@
     </div>
   </section>
 
-  <section>
+  <section id="contacto">
     <div class="cta">
       <h2><span class="es">¿Qué detalle repiten cada semana?</span><span class="en">What detail do you repeat every week?</span></h2>
       <p>
