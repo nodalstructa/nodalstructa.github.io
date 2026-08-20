@@ -29,7 +29,7 @@
   "description": "Desarrollo de componentes, plugins y macros para Tekla Structures con Tekla Open API y C#/.NET, definiciones de Grasshopper, y detallado y cálculo de estructura metálica y hormigón armado.",
   "areaServed": "Remoto",
   "availableLanguage": ["es", "en"],
-  "knowsAbout": ["Tekla Structures", "Tekla Open API", "C#", ".NET", "Grasshopper", "Detallado de estructura metálica", "Cálculo estructural"],
+  "knowsAbout": ["Tekla Structures", "Tekla Open API", "C#", ".NET", "Grasshopper", "Detallado de estructuras metálicas", "Detallado de hormigón armado", "Cálculo estructural"],
   "serviceType": "Desarrollo de componentes y plugins para Tekla Structures"
 }
 </script>
@@ -456,6 +456,18 @@
   }
   .specs span{font-variant-numeric:tabular-nums;}
 
+  /* Alcance de la operación: lo primero que se lee tras el nombre, porque es la
+     respuesta a "¿y esto cuánto me ahorra?". */
+  /* `.tool p` y `.feature p` traen su propio color y se declaran despues, asi que
+     esta regla necesita la misma especificidad para no perder el naranja. */
+  .tool .gain,.feature .gain{
+    display:flex;align-items:baseline;gap:7px;
+    font-family:var(--mono);font-size:11.5px;line-height:1.35;
+    color:var(--rust);margin:0 0 12px;
+  }
+  .gain::before{content:"92";font-size:13px;flex:0 0 auto;}
+  .feature .gain{font-size:12.5px;margin-bottom:14px;}
+
   /* ---------- tool grid ---------- */
   .tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:18px;}
   .tool{
@@ -649,8 +661,11 @@
     </div>
     <p class="secsub">
       <span class="es">Combinamos la capacidad de calcular, modelar y programar, y eso es justo lo que hace falta para automatizar bien: hay que
-      haber sufrido el detalle antes de poder automatizarlo.</span>
-      <span class="en">We combine the ability to calculate, model, and program, and that’s exactly what’s needed to automate effectively: you have to have experienced detailing firsthand before you can automate it properly.</span>
+      haber sufrido el detalle antes de poder automatizarlo. <strong>No somos programadores que aprendieron
+      Tekla Structures: somos gente de estructuras que además desarrolla software para Tekla.</strong></span>
+      <span class="en">We combine the ability to calculate, model, and program, and that’s exactly what’s needed to automate effectively: you have to have experienced detailing firsthand before you can automate it properly. <strong>We are not
+      programmers who learned Tekla Structures — we are structural people who also develop software for
+      Tekla.</strong></span>
     </p>
 
     <div class="services">
@@ -660,12 +675,15 @@
       </figure>
       <div class="list">
         <div>
-          <h4><span class="es">Detallado de estructura metálica</span><span class="en">Steel detailing</span></h4>
-          <p><span class="es">Modelo completo en Tekla Structures, planos de arreglo, fabricación y montaje: naves, 			estructuras
-          industriales, escaleras, pasarelas y barandillas. Trabajamos con diferentes estándares: perfiles, clases, series 		de numeración y entregamos lo que el taller necesita para fabricar.</span>
-          <span class="en">Full Tekla Structures model plus arrangement, shop and erection drawings: industrial buildings 		and plants,
-          stairs, walkways and railings. We work to different standards: profiles, classes and numbering series, and deliver
-          what the shop needs to fabricate.</span></p>
+          <h4><span class="es">Detallado de estructuras</span><span class="en">Structural detailing</span></h4>
+          <p><span class="es">Modelo completo en Tekla Structures, planos de arreglo, fabricación y montaje: naves,
+          estructuras industriales, escaleras, pasarelas y barandillas — y el hormigón armado cuando el proyecto
+          lo lleva, con losas, muros y pilares despiezados barra a barra. Trabajamos con vuestros estándares de
+          perfiles, clases y series de numeración, y entregamos lo que el taller necesita para fabricar.</span>
+          <span class="en">Full Tekla Structures model plus arrangement, shop and erection drawings: industrial
+          buildings and plants, stairs, walkways and railings — and the reinforced concrete when the project calls
+          for it, with slabs, walls and columns scheduled bar by bar. We work to your standards for profiles,
+          classes and numbering series, and deliver what the shop needs to fabricate.</span></p>
         </div>
         <div>
           <h4><span class="es">Cálculo estructural</span><span class="en">Structural analysis</span></h4>
@@ -708,7 +726,7 @@
         <span class="en">Tools that speed up fabrication, drawings and model preparation.</span></p>
       </div>
       <div>
-        <h4><span class="es">Detallistas Tekla</span><span class="en">Tekla detailers</span></h4>
+        <h4><span class="es">Detallistas Tekla Structures</span><span class="en">Tekla Structures detailers</span></h4>
         <p><span class="es">Componentes y macros adaptados a sus estándares: perfiles, clases, series de
         numeración y criterios de taller.</span>
         <span class="en">Components and macros tailored to their own standards: profiles, classes, numbering
@@ -820,6 +838,7 @@
       <div class="body">
         <p class="mark"><b class="plg">PLG</b> <span class="es">Plugin de sistema</span><span class="en">System plugin</span></p>
         <h3>Bracket</h3>
+        <p class="gain"><span class="es">Un clic → chapa plegada, rigidizador y tornillería</span><span class="en">One click → bended plate, stiffener and bolting</span></p>
         <p>
           <span class="es">Une un pilar con una o dos correas en una sola operación. Genera la placa plegada angular,
           el rigidizador y los tornillos, con todos los parámetros expuestos en un diálogo propio
@@ -860,6 +879,7 @@
       <div class="body">
         <p class="mark"><b class="plg">PLG</b> <span class="es">Plugin de sistema · detalle</span><span class="en">System plugin · detail</span></p>
         <h3><span class="es">Barandillas</span><span class="en">Railings</span></h3>
+        <p class="gain"><span class="es">Un punto pinchado → la barandilla completa, montantes incluidos</span><span class="en">One pick → the whole railing, posts included</span></p>
         <p>
           <span class="es">Crea una barandilla entera sobre una viga o una cadena de vigas a partir de un punto:
           reparte los montantes, resuelve los codos y las placas de base con componentes de sistema, y adapta
@@ -1023,7 +1043,7 @@
   <section id="catalogo">
     <div class="sechead">
       <span class="num">06</span>
-      <h2><span class="es">Catálogo completo</span><span class="en">Full catalogue</span></h2>
+      <h2><span class="es">Catálogo</span><span class="en">Catalogue</span></h2>
     </div>
     <p class="secsub">
       <span class="es">Una selección del resto, de componentes paramétricos a utilidades de productividad y
@@ -1046,6 +1066,7 @@
       <article class="tool">
         <p class="mark"><b class="mac">MAC</b></p>
         <h3><span class="es">Ranuras en chapa lagrimada</span><span class="en">Checker plate slots</span></h3>
+        <p class="gain"><span class="es">Varias chapas resueltas en una sola pasada</span><span class="en">Many plates resolved in a single pass</span></p>
         <p>
           <span class="es">Crea las ranuras de una o varias chapas de una pasada. Cachea la geometría de cada
           chapa para no repetir la consulta más cara de la API, de modo que aguanta selecciones grandes sin
@@ -1060,6 +1081,7 @@
       <article class="tool">
         <p class="mark"><b class="mac">MAC</b></p>
         <h3><span class="es">División de chapa lagrimada</span><span class="en">Checker plate splitting</span></h3>
+        <p class="gain"><span class="es">El despiece de una planta entera en una operación</span><span class="en">A whole floor split in one operation</span></p>
         <p>
           <span class="es">Parte una chapa grande en piezas fabricables respetando el formato máximo de
           suministro y apoyando los cortes en las vigas de debajo, para que ninguna junta quede al aire.</span>
@@ -1072,6 +1094,7 @@
       <article class="tool">
         <p class="mark"><b class="mac">MAC</b></p>
         <h3><span class="es">Rigidizadores de pórtico</span><span class="en">Portal frame stiffeners</span></h3>
+        <p class="gain"><span class="es">Todas las conexiones seleccionadas de una vez</span><span class="en">Every selected connection at once</span></p>
         <p>
           <span class="es">Añade los rigidizadores a las conexiones de pórtico ya montadas: recorre las
           conexiones seleccionadas, localiza sus chapas y coloca el rigidizador que le corresponde a cada una.</span>
@@ -1084,6 +1107,7 @@
       <article class="tool">
         <p class="mark"><b class="mac">MAC</b></p>
         <h3><span class="es">Unión columna–viga soldada</span><span class="en">Welded column–beam joint</span></h3>
+        <p class="gain"><span class="es">Uniones encadenadas sin salir del modelo</span><span class="en">Joints chained without leaving the model</span></p>
         <p>
           <span class="es">Resuelve la unión soldada pinchando columna y viga, y vuelve a pedir la siguiente
           pareja sin cerrarse: se encadenan decenas de uniones sin tocar el ratón fuera del modelo.</span>
@@ -1096,6 +1120,7 @@
       <article class="tool">
         <p class="mark"><b class="mac">MAC</b></p>
         <h3><span class="es">Soldadura (44)</span><span class="en">Weld (44)</span></h3>
+        <p class="gain"><span class="es">Uniones seguidas sin reabrir la herramienta</span><span class="en">Joints one after another without reopening the tool</span></p>
         <p>
           <span class="es">Variante de unión soldada sobre perfiles, encadenable igual que la anterior y
           empaquetada como instalador para desplegarla en todos los puestos de la oficina.</span>
@@ -1108,6 +1133,7 @@
       <article class="tool">
         <p class="mark"><b class="mac">MAC</b></p>
         <h3><span class="es">Tornillería de pisos</span><span class="en">Flooring bolts</span></h3>
+        <p class="gain"><span class="es">Sin consultar el prontuario de gramiles</span><span class="en">No gauge tables to look up</span></p>
         <p>
           <span class="es">Coloca la tornillería de los pisos tomando el gramil correcto de una tabla que cubre
           las series UPN, IPN, IPE, HEA y HEB completas. El modelador no consulta el prontuario: la herramienta
@@ -1137,6 +1163,7 @@
       <article class="tool">
         <p class="mark"><b class="gh">GH</b></p>
         <h3><span class="es">Uniones atornilladas en masa</span><span class="en">Bolted connections in bulk</span></h3>
+        <p class="gain"><span class="es">Decenas de conexiones en una operación, desde Excel</span><span class="en">Dozens of connections in one operation, driven from Excel</span></p>
         <p>
           <span class="es">Aplica las uniones de catálogo a todo el modelo de una pasada: chapa de testa,
           placa de anclaje, tapajuntas, cartelas de arriostrado, empalmes de tubo, pilar soldado con
@@ -1152,6 +1179,7 @@
       <article class="tool">
         <p class="mark"><b class="gh">GH</b></p>
         <h3><span class="es">Clasificar y nombrar</span><span class="en">Classify and name</span></h3>
+        <p class="gain"><span class="es">El modelo entero nombrado y clasificado de una pasada</span><span class="en">The whole model named and classified in one pass</span></p>
         <p>
           <span class="es">Recorre el modelo y pone a cada pieza el nombre y la clase que le tocan según lo
           que es: arriostrado, tubo, escalera, vigueta o viga. Es lo que hace que los listados, los filtros y
@@ -1166,6 +1194,7 @@
       <article class="tool">
         <p class="mark"><b class="gh">GH</b></p>
         <h3><span class="es">Arriostrados</span><span class="en">Bracing</span></h3>
+        <p class="gain"><span class="es">Todos los arriostrados ajustados y resueltos a la vez</span><span class="en">Every bracing member snapped and resolved at once</span></p>
         <p>
           <span class="es">Baja los puntos de inicio y final de los arriostrados hasta las vigas a las que
           acometen, para que la barra muera donde debe, y resuelve la placa soldada del encuentro.</span>
@@ -1178,6 +1207,7 @@
       <article class="tool">
         <p class="mark"><b class="gh">GH</b></p>
         <h3><span class="es">División de barras</span><span class="en">Member splitting</span></h3>
+        <p class="gain"><span class="es">Muchas barras partidas en una sola operación</span><span class="en">Many members split in a single operation</span></p>
         <p>
           <span class="es">Parte vigas y tubos por dos puntos, en varias piezas a la vez, o los arriostrados
           por su mitad. Los puntos de corte pueden venir de un campo de usuario, así que el despiece de
@@ -1192,6 +1222,7 @@
       <article class="tool">
         <p class="mark"><b class="gh">GH</b></p>
         <h3><span class="es">Numeración</span><span class="en">Numbering</span></h3>
+        <p class="gain"><span class="es">La serie del proyecto aplicada a todo el modelo</span><span class="en">The project's numbering series applied across the model</span></p>
         <p>
           <span class="es">Aplica la serie de numeración del proyecto a las piezas y conjuntos según su tipo,
           sin ir marcando a mano grupo por grupo antes de lanzar la numeración de Tekla.</span>
@@ -1204,6 +1235,7 @@
       <article class="tool">
         <p class="mark"><b class="gh">GH</b></p>
         <h3><span class="es">Excavación</span><span class="en">Excavation</span></h3>
+        <p class="gain"><span class="es">El vaciado generado desde la cimentación ya modelada</span><span class="en">Excavation generated from the foundations already modelled</span></p>
         <p>
           <span class="es">Genera el vaciado de las zapatas con el talud que toque — 45° o 2:3 — a partir de
           la cimentación ya modelada. Sirve para medir el movimiento de tierras sin dibujarlo aparte.</span>
