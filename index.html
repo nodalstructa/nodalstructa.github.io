@@ -375,6 +375,8 @@
   .feature figure + figure{border-top:1px solid var(--rule);}
   .feature figure img{max-width:100%;height:auto;display:block;margin:0 auto;}
   .feature figure video{width:100%;height:auto;display:block;background:#000;}
+  /* el bucle no lleva controles: es una demostración, no un reproductor */
+  .feature figure video.loop{background:#fff;}
 
   /* Video expand. The artifact viewer's sandbox blocks the native fullscreen
      API, so the built-in fullscreen control is hidden and replaced by a button
@@ -817,6 +819,11 @@
     <article class="feature">
       <div class="shots">
         <figure>
+          <video class="loop" loop muted playsinline preload="none" poster="assets/loop_br_poster.webp"
+                 data-src="assets/loop_br.mp4"></video>
+          <figcaption><span class="es">La unión, al pinchar</span><span class="en">The connection, on pick</span></figcaption>
+        </figure>
+        <figure>
           <img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAUABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDotSJFm5BxVTRWZlfJzSXt1JLCyGMgetVtPa4j3CEBga0Xw2M3F86Zv0VRR7srllGaKixrYlvkVrVgRVfSY1QPiiirXwsxfxo0aKKKzNT/2Q==) center/cover no-repeat" src="assets/bracket.webp" data-full="assets/bracket-full.webp" alt="Unión pilar–correa: chapa plegada angular con rigidizador y tornillos, modelada en Tekla Structures">
           <figcaption><span class="es">Resultado en el modelo</span><span class="en">Result in the model</span></figcaption>
         </figure>
@@ -857,6 +864,11 @@
 
     <article class="feature flip">
       <div class="shots">
+        <figure>
+          <video class="loop" loop muted playsinline preload="none" poster="assets/loop_ba_poster.webp"
+                 data-src="assets/loop_ba.mp4"></video>
+          <figcaption><span class="es">La barandilla, al pinchar</span><span class="en">The railing, on pick</span></figcaption>
+        </figure>
         <figure>
           <img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAJABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDoGvQDjBz9KVLgyZ4x9ard6kj607CLQk4560VAetFFhn//2Q==) center/cover no-repeat" src="assets/dlg_barandillas.webp" data-full="assets/dlg_barandillas-full.webp" alt="Barandilla acotada en Tekla mostrando los perfiles Ø42.4×3, Ø33.7×3, L60×6 y PL100×4, junto al diálogo de parámetros del componente">
           <figcaption><span class="es">Resultado en el modelo</span><span class="en">Labelled profiles and parameter dialog</span></figcaption>
@@ -1418,6 +1430,27 @@
         if (e.target === wrap && wrap.classList.contains('zoomed')) overlayOff(wrap);
       });
     });
+
+    // Los bucles no se descargan al abrir la página: la fuente se asigna cuando la
+    // tarjeta entra en pantalla. Y si el visitante ha pedido reducir el movimiento,
+    // se queda la imagen fija.
+    var quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var bucles = [].slice.call(document.querySelectorAll('video.loop'));
+    if (!quieto && bucles.length && 'IntersectionObserver' in window){
+      var vigia = new IntersectionObserver(function(entradas){
+        entradas.forEach(function(e){
+          var v = e.target;
+          if (e.isIntersecting){
+            if (!v.src) v.src = v.getAttribute('data-src');
+            var pr = v.play();
+            if (pr && pr.catch) pr.catch(function(){});
+          } else if (!v.paused){
+            v.pause();
+          }
+        });
+      }, { rootMargin: '200px' });
+      bucles.forEach(function(v){ vigia.observe(v); });
+    }
 
     document.addEventListener('keydown', function(e){
       var abierta = lb.classList.contains('open');
