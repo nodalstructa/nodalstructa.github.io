@@ -505,24 +505,19 @@
     display:flex;flex-direction:column;justify-content:center;min-width:0;
   }
   .caps .muestra img{width:100%;height:auto;display:block;cursor:zoom-in;}
-  .caps .muestra figcaption{
-    font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
-    color:#8b96a3;padding:10px 14px 12px;text-align:center;
-  }
 
   /* texto e imagen de Grasshopper, uno al lado del otro */
   .ghintro{
     display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-    gap:26px;align-items:center;margin-bottom:28px;
+    gap:26px;align-items:center;
+    margin:48px 0 28px;padding-top:30px;border-top:1px solid var(--rule);
   }
   .ghintro .secsub{margin-bottom:0;}
-  .ghintro figure{margin:0;padding:12px 12px 0;background:#fff;
+  /* la regla separadora la pone ahora .ghintro, a todo lo ancho, en vez del titulillo */
+  .ghintro .subhead{margin:0 0 8px;padding-top:0;border-top:0;}
+  .ghintro figure{margin:0;padding:12px;background:#fff;
     border:1px solid var(--rule);box-shadow:var(--shadow);}
   .ghintro img{width:100%;height:auto;display:block;cursor:zoom-in;}
-  .ghintro figcaption{
-    font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
-    color:#6b7682;padding:10px 0 11px;text-align:center;
-  }
 
   /* ---------- capability list ---------- */
   .caps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0;
@@ -1259,7 +1254,6 @@
       </div>
       <figure>
         <img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAMABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDppDkgY70Z2t0p0oAxj1p4AxQAgJ9KKdRQB//Z) center/cover no-repeat" src="assets/ej_gh.webp" data-full="assets/ej_gh-full.webp" alt="Lienzo de Grasshopper con la definición de una herramienta para Tekla: componentes encadenados que leen las piezas del modelo, calculan la geometría y devuelven los objetos">
-        <figcaption><span class="es">Una definición real: lee las piezas del modelo, calcula y devuelve los objetos a Tekla</span><span class="en">A real definition: it reads the model's parts, computes, and writes the objects back to Tekla</span></figcaption>
       </figure>
     </div>
 
@@ -1356,7 +1350,6 @@
     <div class="caps">
       <figure class="muestra">
         <img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAQABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDAySuKZTh3pMUAJRRRQB//2Q==) center/cover no-repeat" src="assets/ej_api.webp" data-full="assets/ej_api-full.webp" alt="Código C# de una herramienta para Tekla Structures: importa Tekla.Structures.Model, comprueba la conexión con el modelo y usa el Picker para que el usuario seleccione las piezas">
-        <figcaption><span class="es">C# sobre la Tekla Open API · selección con Picker y escritura en el modelo</span><span class="en">C# on the Tekla Open API · Picker selection and writing to the model</span></figcaption>
       </figure>
       <div>
         <h4><span class="es">Componentes paramétricos</span><span class="en">Parametric components</span></h4>
