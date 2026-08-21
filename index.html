@@ -45,6 +45,7 @@
     --accent:     #0b6e9e;   /* acero */
     --accent-2:   #084f73;
     --rust:       #b8601c;   /* minio de imprimación */
+    --gh:         #4a7a28;   /* verde de Grasshopper */
     --rule:       #c3c9d2;
     --rule-soft:  #dde1e7;
     --shadow:     0 1px 2px rgba(16,23,32,.06), 0 8px 24px -12px rgba(16,23,32,.18);
@@ -61,6 +62,7 @@
       --accent:     #56aada;
       --accent-2:   #8ccbee;
       --rust:       #e0954f;
+      --gh:         #7aa653;
       --rule:       #2c3844;
       --rule-soft:  #222c37;
       --shadow:     0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
@@ -77,6 +79,7 @@
     --accent:     #56aada;
     --accent-2:   #8ccbee;
     --rust:       #e0954f;
+    --gh:         #7aa653;
     --rule:       #2c3844;
     --rule-soft:  #222c37;
     --shadow:     0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
@@ -344,17 +347,28 @@
   /* only the description spans — not the language spans nested inside <b> */
   .prj figcaption > span{font-size:14px;color:var(--ink-soft);}
 
-  /* ---------- wide evidence strip ---------- */
-  .strip{
+  /* ---------- tira ancha de ejemplo ---------- */
+  .strip{background:var(--surface);border:1px solid var(--rule);box-shadow:var(--shadow);margin-bottom:18px;}
+  .strip figure{margin:0;padding:16px 16px 0;background:#fff;}
+  /* se limita la altura para que un pantallazo no se coma la pagina;
+     quien quiera leerlo lo amplia */
+  .strip img{max-width:100%;max-height:420px;width:auto;height:auto;display:block;margin:0 auto;}
+  .strip figcaption{font-family:var(--mono);font-size:10px;letter-spacing:.13em;
+    text-transform:uppercase;color:#6b7682;padding:11px 0 13px;text-align:center;}
+
+  /* ---------- ficha ancha: la animación manda y el texto la acompaña ---------- */
+  .wide{
+    display:grid;grid-template-columns:minmax(0,58fr) minmax(0,42fr);
     background:var(--surface);border:1px solid var(--rule);box-shadow:var(--shadow);
     margin-bottom:18px;
   }
-  .strip figure{margin:0;padding:16px 16px 0;background:#fff;}
-  .strip img,.strip video{width:100%;height:auto;display:block;background:#fff;}
-  .strip figcaption{
-    font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
-    color:#6b7682;padding:11px 0 13px;text-align:center;
-  }
+  .wide figure{margin:0;padding:0;background:#fff;border-right:1px solid var(--rule);
+    display:flex;align-items:center;min-width:0;}
+  .wide video{width:100%;height:auto;display:block;background:#fff;}
+  .wide .body{padding:26px 30px;min-width:0;display:flex;flex-direction:column;}
+  .wide p{margin:0 0 14px;color:var(--ink-soft);font-size:14.8px;}
+  .wide .tag{margin-top:auto;margin-bottom:0;font-family:var(--mono);font-size:11px;
+    color:var(--ink-faint);border-top:1px solid var(--rule-soft);padding-top:11px;}
 
   /* ---------- featured tools ---------- */
   .feature{
@@ -439,7 +453,7 @@
   }
   .mark .plg{background:var(--accent);}
   .mark .mac{background:var(--rust);}
-  .mark .gh{background:var(--accent-2);}
+  .mark .gh{background:var(--gh);}
 
   .subhead{
     font-family:var(--display);font-stretch:87.5%;font-weight:600;
@@ -465,17 +479,6 @@
     text-transform:uppercase;color:var(--ink-faint);font-weight:400;padding-top:3px;
   }
   .specs span{font-variant-numeric:tabular-nums;}
-
-  /* Alcance de la operación: lo primero que se lee tras el nombre, porque es la
-     respuesta a "¿y esto cuánto me ahorra?". */
-  /* `.tool p` y `.feature p` traen su propio color y se declaran despues, asi que
-     esta regla necesita la misma especificidad para no perder el naranja. */
-  .tool .gain{
-    display:flex;align-items:baseline;gap:7px;
-    font-family:var(--mono);font-size:11.5px;line-height:1.35;
-    color:var(--rust);margin:0 0 12px;
-  }
-  .gain::before{content:"→";font-size:13px;flex:0 0 auto;}
 
   /* ---------- tool grid ---------- */
   .tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:18px;}
@@ -574,6 +577,9 @@
     .services{grid-template-columns:1fr;}
     .services .shot{border-right:0;border-bottom:1px solid var(--rule);}
     .services .list > div{padding:22px;}
+    .wide{grid-template-columns:1fr;}
+    .wide figure{border-right:0;border-bottom:1px solid var(--rule);}
+    .wide .body{padding:22px;}
     .feature{grid-template-columns:1fr;}
     .feature .shots{border-left:0;border-top:1px solid var(--rule);}
     .feature.flip .shots{order:0;border-right:0;border-top:1px solid var(--rule);}
@@ -722,6 +728,13 @@
       <span class="en">We work with the people who live inside the model: offices that detail every day and
       companies that fabricate what comes out of that model.</span>
     </p>
+    <div class="strip">
+      <figure>
+        <img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAQABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDAySuKZTh3pMUAJRRRQB//2Q==) center/cover no-repeat" src="assets/ej_api.webp" data-full="assets/ej_api-full.webp" alt="Código C# de una herramienta para Tekla Structures: importa Tekla.Structures.Model, comprueba la conexión con el modelo y usa el Picker para que el usuario seleccione las piezas">
+        <figcaption><span class="es">C# sobre la Tekla Open API · selección con Picker y escritura en el modelo</span><span class="en">C# on the Tekla Open API · Picker selection and writing to the model</span></figcaption>
+      </figure>
+    </div>
+
     <div class="caps">
       <div>
         <h4><span class="es">Oficinas de ingeniería</span><span class="en">Engineering offices</span></h4>
@@ -1092,58 +1105,31 @@
       <b>GH</b> Grasshopper definition.</span>
     </p>
 
-    <div class="strip">
+    <article class="wide">
       <figure>
         <video class="loop" loop muted playsinline autoplay preload="none" poster="assets/loop_chapa_poster.webp"
                data-src="assets/loop_chapa.mp4"
-               aria-label="Animación de una planta de chapa lagrimada en Tekla: primero la placa entera, después dividida en piezas fabricables, y por último con sus ranuras y taladros"></video>
-        <figcaption><span class="es">Una planta entera resuelta por tres herramientas: cortes en medidas comerciales, ranuras y agujeros repartidos para soldadura.</span><span class="en">One whole floor resolved by three tools: cuts to commercial sizes, slots and holes laid out for welding.</span></figcaption>
+               aria-label="Animación de una planta de chapa lagrimada en Tekla: primero la placa entera, después cortada a medidas comerciales, y por último con sus ranuras y agujeros"></video>
       </figure>
-    </div>
+      <div class="body">
+        <p class="mark"><b class="mac">MAC</b> <span class="es">Tres macros encadenadas</span><span class="en">Three chained macros</span></p>
+        <h3><span class="es">Chapa lagrimada</span><span class="en">Checker plate</span></h3>
+        <p>
+          <span class="es">Una planta entera resuelta en tres pasos. Primero se corta la placa a medidas
+          comerciales, apoyando cada corte en las vigas de debajo para que ninguna junta quede al aire.
+          Después se hacen las ranuras de una o varias placas de una pasada. Y por último se reparten los
+          agujeros de soldadura, comprobando cada posición contra el sólido real de la placa, así que no
+          perfora sobre huecos ni cortes.</span>
+          <span class="en">A whole floor resolved in three steps. First the plate is cut to commercial sizes,
+          landing every cut on a beam below so no joint is left unsupported. Then the slots are made across one
+          or many plates in a single pass. Finally the welding holes are laid out, each position tested against
+          the plate's real solid, so it never drills over openings or cuts.</span>
+        </p>
+        <p class="tag"><span class="es">Distribuidas como instaladores TSEP</span><span class="en">Shipped as TSEP installers</span></p>
+      </div>
+    </article>
 
     <div class="tools">
-
-      <article class="tool">
-        <p class="mark"><b class="mac">MAC</b></p>
-        <h3><span class="es">Ranuras en chapa lagrimada</span><span class="en">Checker plate slots</span></h3>
-        <p class="gain"><span class="es">Varias placas resueltas en una sola pasada</span><span class="en">Many plates resolved in a single pass</span></p>
-        <p>
-          <span class="es">Crea las ranuras de una o varias placas de una pasada. Cachea la geometría de cada
-          placa para no repetir la consulta más cara de la API, de modo que aguanta selecciones grandes sin
-          bloquear Tekla.</span>
-          <span class="en">Creates the slots on one or many plates in a single pass. It caches each plate's
-          geometry to avoid repeating the API's most expensive call, so it handles large selections without
-          freezing Tekla.</span>
-        </p>
-        <p class="tag"><span class="es">Optimizado para lotes grandes</span><span class="en">Optimised for large batches</span></p>
-      </article>
-
-      <article class="tool">
-        <p class="mark"><b class="mac">MAC</b></p>
-        <h3><span class="es">División de chapa lagrimada</span><span class="en">Checker plate splitting</span></h3>
-        <p class="gain"><span class="es">El despiece de una planta entera en una operación</span><span class="en">A whole floor split in one operation</span></p>
-        <p>
-          <span class="es">Parte una placa grande en piezas fabricables respetando el formato máximo de
-          suministro y apoyando los cortes en las vigas de debajo, para que ninguna junta quede al aire.</span>
-          <span class="en">Splits a large plate into fabricable pieces within the maximum supply format,
-          landing every cut on a beam below so no joint is left unsupported.</span>
-        </p>
-        <p class="tag"><span class="es">Distribuido como instalador TSEP</span><span class="en">Shipped as a TSEP installer</span></p>
-      </article>
-
-      <article class="tool">
-        <p class="mark"><b class="mac">MAC</b></p>
-        <h3><span class="es">Chapa lagrimada atornillada</span><span class="en">Bolted checker plate</span></h3>
-        <p class="gain"><span class="es">Sin consultar el prontuario de gramiles</span><span class="en">No gauge tables to look up</span></p>
-        <p>
-          <span class="es">Coloca la tornillería de los pisos tomando el gramil correcto de una tabla que cubre
-          las series UPN, IPN, IPE, HEA y HEB completas. El modelador no consulta el prontuario: la herramienta
-          ya lo sabe.</span>
-          <span class="en">Places flooring bolts using the correct gauge from a table covering the complete
-          UPN, IPN, IPE, HEA and HEB series. The modeller never opens the handbook — the tool already knows.</span>
-        </p>
-        <p class="tag"><span class="es">Prontuario de gramiles incorporado</span><span class="en">Built-in gauge tables</span></p>
-      </article>
 
       <article class="tool">
         <figure>
@@ -1152,7 +1138,6 @@
         </figure>
         <p class="mark"><b class="mac">MAC</b></p>
         <h3><span class="es">Rigidizadores de pórtico</span><span class="en">Portal frame stiffeners</span></h3>
-        <p class="gain"><span class="es">Todas las conexiones seleccionadas de una vez</span><span class="en">Every selected connection at once</span></p>
         <p>
           <span class="es">Añade los rigidizadores a las conexiones de pórtico ya montadas: recorre las
           conexiones seleccionadas, localiza sus placas y coloca el rigidizador que le corresponde a cada una.</span>
@@ -1169,7 +1154,6 @@
         </figure>
         <p class="mark"><b class="mac">MAC</b></p>
         <h3><span class="es">Pilar soldado con rigidizadores</span><span class="en">Welded column with stiffeners</span></h3>
-        <p class="gain"><span class="es">Uniones encadenadas sin salir del modelo</span><span class="en">Joints chained without leaving the model</span></p>
         <p>
           <span class="es">Resuelve la unión soldada haciendo click en columna y viga, y vuelve a pedir la siguiente
           pareja sin cerrarse: se encadenan decenas de uniones sin tocar el ratón fuera del modelo.</span>
@@ -1186,7 +1170,6 @@
         </figure>
         <p class="mark"><b class="mac">MAC</b></p>
         <h3><span class="es">Preparación de soldadura</span><span class="en">Weld preparation</span></h3>
-        <p class="gain"><span class="es">Uniones seguidas sin reabrir la herramienta</span><span class="en">Joints one after another without reopening the tool</span></p>
         <p>
           <span class="es">Variante de unión soldada sobre perfiles, encadenable igual que la anterior y
           empaquetada como instalador para desplegarla en todos los puestos de la oficina.</span>
@@ -1210,12 +1193,18 @@
       compiling a component isn't worth it.</span>
     </p>
 
+    <div class="strip">
+      <figure>
+        <img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAMABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDppDkgY70Z2t0p0oAxj1p4AxQAgJ9KKdRQB//Z) center/cover no-repeat" src="assets/ej_gh.webp" data-full="assets/ej_gh-full.webp" alt="Lienzo de Grasshopper con la definición de una herramienta para Tekla: componentes encadenados que leen las piezas del modelo, calculan la geometría y devuelven los objetos">
+        <figcaption><span class="es">Una definición real: lee las piezas del modelo, calcula y devuelve los objetos a Tekla</span><span class="en">A real definition: it reads the model's parts, computes, and writes the objects back to Tekla</span></figcaption>
+      </figure>
+    </div>
+
     <div class="tools">
 
       <article class="tool">
         <p class="mark"><b class="gh">GH</b></p>
         <h3><span class="es">Uniones atornilladas en masa</span><span class="en">Bolted connections in bulk</span></h3>
-        <p class="gain"><span class="es">Decenas de conexiones en una operación, desde Excel</span><span class="en">Dozens of connections in one operation, driven from Excel</span></p>
         <p>
           <span class="es">Aplica las uniones de catálogo a todo el modelo de una pasada: placa de testa,
           placa de anclaje, tapajuntas, cartelas de arriostrado, empalmes de tubo, pilar soldado con
@@ -1231,7 +1220,6 @@
       <article class="tool">
         <p class="mark"><b class="gh">GH</b></p>
         <h3><span class="es">Clasificar y nombrar</span><span class="en">Classify and name</span></h3>
-        <p class="gain"><span class="es">El modelo entero nombrado y clasificado de una pasada</span><span class="en">The whole model named and classified in one pass</span></p>
         <p>
           <span class="es">Recorre el modelo y pone a cada pieza el nombre y la clase que le tocan según lo
           que es: arriostrado, tubo, escalera, vigueta o viga. Es lo que hace que los listados, los filtros y
@@ -1246,7 +1234,6 @@
       <article class="tool">
         <p class="mark"><b class="gh">GH</b></p>
         <h3><span class="es">Arriostrados</span><span class="en">Bracing</span></h3>
-        <p class="gain"><span class="es">Todos los arriostrados ajustados y resueltos a la vez</span><span class="en">Every bracing member snapped and resolved at once</span></p>
         <p>
           <span class="es">Baja los puntos de inicio y final de los arriostrados hasta las vigas a las que
           acometen, para que la barra muera donde debe, y resuelve la placa soldada del encuentro.</span>
@@ -1259,7 +1246,6 @@
       <article class="tool">
         <p class="mark"><b class="gh">GH</b></p>
         <h3><span class="es">División de barras</span><span class="en">Member splitting</span></h3>
-        <p class="gain"><span class="es">Muchas barras partidas en una sola operación</span><span class="en">Many members split in a single operation</span></p>
         <p>
           <span class="es">Parte vigas y tubos por dos puntos, en varias piezas a la vez, o los arriostrados
           por su mitad. Los puntos de corte pueden venir de un campo de usuario, así que el despiece de
@@ -1274,7 +1260,6 @@
       <article class="tool">
         <p class="mark"><b class="gh">GH</b></p>
         <h3><span class="es">Numeración</span><span class="en">Numbering</span></h3>
-        <p class="gain"><span class="es">La serie del proyecto aplicada a todo el modelo</span><span class="en">The project's numbering series applied across the model</span></p>
         <p>
           <span class="es">Aplica la serie de numeración del proyecto a las piezas y conjuntos según su tipo,
           sin ir marcando a mano grupo por grupo antes de lanzar la numeración de Tekla.</span>
@@ -1287,7 +1272,6 @@
       <article class="tool">
         <p class="mark"><b class="gh">GH</b></p>
         <h3><span class="es">Excavación</span><span class="en">Excavation</span></h3>
-        <p class="gain"><span class="es">El vaciado generado desde la cimentación ya modelada</span><span class="en">Excavation generated from the foundations already modelled</span></p>
         <p>
           <span class="es">Genera el vaciado de las zapatas con el talud que toque — 45° o 2:3 — a partir de
           la cimentación ya modelada. Sirve para medir el movimiento de tierras sin dibujarlo aparte.</span>
