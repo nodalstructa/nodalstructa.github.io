@@ -579,33 +579,31 @@
   .mailto:hover{background:var(--rust);color:#fff;border-color:var(--rust);}
   .mailto:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 
-  /* ---------- cifras de ahorro ---------- */
-  .cifras{
-    display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    background:var(--surface);border:1px solid var(--rule);border-top:0;
-    box-shadow:var(--shadow);
+  /* ---------- cifras de ahorro, junto a la entrada de la seccion ---------- */
+  .procintro{
+    display:grid;grid-template-columns:minmax(0,1fr) auto;
+    gap:24px 40px;align-items:center;margin-bottom:28px;
   }
-  .cifras > div{
-    padding:24px 26px;display:flex;flex-direction:column;gap:8px;
-    border-right:1px solid var(--rule-soft);
-  }
-  .cifras > div:last-child{border-right:0;}
+  .procintro .secsub{margin-bottom:0;}
+  .cifras{display:flex;gap:34px;flex-wrap:wrap;}
+  .cifras > div{display:flex;flex-direction:column;gap:2px;}
   .cifras b{
     font-family:var(--display);font-stretch:87.5%;font-weight:600;
-    font-size:clamp(24px,2.8vw,31px);line-height:1.05;color:var(--ink);
-    font-variant-numeric:tabular-nums;
+    font-size:clamp(22px,2.4vw,28px);line-height:1.05;color:var(--ink);
+    font-variant-numeric:tabular-nums;white-space:nowrap;
   }
   .cifras b i{font-style:normal;color:var(--rust);padding:0 2px;}
-  /* solo las descripciones: los <span> de idioma van dentro del <b> y no
-     deben heredar este tamano */
-  .cifras > div > span{font-size:14.2px;color:var(--ink-soft);}
+  /* solo las etiquetas: los <span> de idioma van dentro del <b> */
+  .cifras > div > span{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;
+    text-transform:uppercase;color:var(--ink-faint);
+  }
 
   /* ---------- process steps ---------- */
   .steps{
     display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
     background:var(--surface);border:1px solid var(--rule);box-shadow:var(--shadow);
   }
-  .steps + .cifras{margin-top:0;}
   .steps > div{padding:22px 26px;border-right:1px solid var(--rule-soft);border-bottom:1px solid var(--rule-soft);}
   .steps .stepnum{
     font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--rust);
@@ -620,6 +618,7 @@
     .services{grid-template-columns:1fr;}
     .services .shot{border-right:0;border-bottom:1px solid var(--rule);}
     .services .list > div{padding:22px;}
+    .procintro{grid-template-columns:1fr;gap:18px;}
     .ghintro{grid-template-columns:1fr;gap:18px;}
     .caps .muestra{grid-column:span 1;}
     .wide{grid-template-columns:1fr;}
@@ -656,14 +655,12 @@
           <span class="en">Nodal Structa<span class="thin">Structural detailing, analysis and automation</span></span>
         </h1>
         <p class="lede">
-          <span class="es">Diseño y cálculo de estructuras metálicas y de hormigón armado, combinado con el desarrollo de
-          componentes, plugins y herramientas a medida con <strong>Tekla Open API</strong>, <strong>C#/.NET</strong> y
-          <strong>Grasshopper</strong>, para automatizar tareas repetitivas de modelado y detallado: uniones atornilladas,
-          corte y despiece de placas de piso, barandillas y otros elementos constructivos.</span>
-          <span class="en">Steel and reinforced concrete structural design and analysis, combined with the development of
-          custom components, plugins and tools with <strong>Tekla Open API</strong>, <strong>C#/.NET</strong> and
-          <strong>Grasshopper</strong>, to automate repetitive modelling and detailing tasks: bolted connections, floor
-          plate splitting and hole layouts, railings and other building elements.</span>
+          <span class="es">Diseño y cálculo de estructuras metálicas y de hormigón armado, y desarrollo de
+          componentes, plugins y herramientas a medida con <strong>Tekla Open API</strong>, <strong>C#/.NET</strong>
+          y <strong>Grasshopper</strong> para automatizar el modelado y el detallado repetitivo.</span>
+          <span class="en">Structural design and analysis in steel and reinforced concrete, plus custom components,
+          plugins and tools built with the <strong>Tekla Open API</strong>, <strong>C#/.NET</strong> and
+          <strong>Grasshopper</strong> to automate repetitive modelling and detailing.</span>
         </p>
       </div>
       <div class="langswitch" role="group" aria-label="Idioma / Language">
@@ -732,7 +729,6 @@
     <div class="services">
       <figure class="shot">
         <img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAcABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDQ1W5dZyATgVZ0eaSVG8w5x0qhrDH7SRU+k3SRgiQ4pdRXNuimrIrrlTkUUxmBrC/6QTVJDtrqZreKYfvEBqnJYW5b7mPpUONwQWDZtVOaKuRQRxxhVXAoqwP/2Q==) center/cover no-repeat" src="assets/band.webp" data-full="assets/band-full.webp" alt="Modelo Tekla de la planta de mortero seco de Bulgaria: torre de estructura metálica de varias plantas junto a un edificio anexo">
-        <figcaption><span class="es">Planta de mortero seco en Bulgaria</span><span class="en">Dry mortar plant in Bulgaria</span></figcaption>
       </figure>
       <div class="list">
         <div>
@@ -781,7 +777,7 @@
         <span class="en">Automation of repetitive modelling and detailing processes.</span></p>
       </div>
       <div>
-        <h4><span class="es">Empresas de estructuras metálicas</span><span class="en">Steel fabricators</span></h4>
+        <h4><span class="es">Empresas de estructuras</span><span class="en">Structural fabricators</span></h4>
         <p><span class="es">Herramientas para acelerar la fabricación, los planos y la preparación del modelo.</span>
         <span class="en">Tools that speed up fabrication, drawings and model preparation.</span></p>
       </div>
@@ -806,13 +802,25 @@
       <span class="num">03</span>
       <h2><span class="es">Cómo trabajamos</span><span class="en">How we work</span></h2>
     </div>
-    <p class="secsub">
-      <span class="es">De la tarea que hoy se hace a mano a una herramienta instalada en todos los puestos.
-      El presupuesto se cierra al terminar el paso 02, cuando ya está claro qué tiene que hacer la herramienta
-      y qué casos tiene que resolver.</span>
-      <span class="en">From the task done by hand today to a tool installed on every workstation. The price is
-      fixed at the end of step 02, once it is clear what the tool has to do and which cases it has to cover.</span>
-    </p>
+    <div class="procintro">
+      <p class="secsub">
+        <span class="es">De la tarea que hoy se hace a mano a una herramienta instalada en todos los puestos.
+        El presupuesto se cierra al terminar el paso 02, cuando ya está claro qué tiene que hacer la herramienta
+        y qué casos tiene que resolver.</span>
+        <span class="en">From the task done by hand today to a tool installed on every workstation. The price is
+        fixed at the end of step 02, once it is clear what the tool has to do and which cases it has to cover.</span>
+      </p>
+      <div class="cifras">
+        <div>
+          <b>30 min <i>→</i> 1 clic</b>
+          <span class="es">Una barandilla completa</span><span class="en">A complete railing</span>
+        </div>
+        <div>
+          <b>≈ 40 %</b>
+          <span class="es">más rápido</span><span class="en">faster</span>
+        </div>
+      </div>
+    </div>
     <div class="steps">
       <div>
         <b class="stepnum">01</b>
@@ -862,22 +870,6 @@
       </div>
     </div>
 
-    <div class="cifras">
-      <div>
-        <b>30 min <i>→</i> 1 clic</b>
-        <span class="es">Lo que costaba montar a mano una barandilla completa sobre viga o zanca, con sus montantes, pasamanos y rodapié.</span>
-        <span class="en">What it took to build a full railing by hand on a beam or stringer, with its posts, handrail and toe plate.</span>
-      </div>
-      <div>
-        <b>2 min <i>→</i> <span class="es">una pasada</span><span class="en">one pass</span></b>
-        <span class="es">Lo que costaba cada unión atornillada, aplicado ahora a todo el modelo en una sola operación desde Excel.</span>
-        <span class="en">What each bolted connection took, now applied across the whole model in a single Excel-driven operation.</span>
-      </div>
-      <div>
-        <b>≈ 40 %</b>
-        <span class="es">Del tiempo de modelado y detallado, según el peso que tenga el componente dentro del proyecto.</span>
-        <span class="en">Of modelling and detailing time, depending on how much of the project the component covers.</span>
-      </div>
     </div>
   </section>
 
@@ -1069,6 +1061,8 @@
           <div class="track">
             <div class="slide"><img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAfABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDp7hmWFipwQKyY5p3n5lGM1f1NitscHFYu4bxhSPpTREmdIh+Uc5oqjbH9yPvde9FIq4uquDBtBGfSsXy3VwcGtHVUYyfKoye+aqi1u0IbK8npmgTVzQtSxh5znNFSwRT+WN5XJ9KKB2P/2Q==) center/cover no-repeat" src="assets/gal1.webp" data-full="assets/gal1-full.webp" alt="Modelo Tekla de la torre de proceso Galaxie Biojet: seis niveles de plataformas con escaleras, barandillas, arriostramientos y cimentación"></div>
             <div class="slide"><img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAeABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDbv7raMRy4PcVFYTyNMA8mQaivQ3mH5FIzUdpxcICuKdtDO7ub9FA6UUjQwb6NzKSAeT1BqC23xyqxDHBq/e28wJZZRgHOMVXt4Jpio8wAewpk8ptRSb4w2MUUQx7IwpOcd6KRR//Z) center/cover no-repeat" src="assets/gal2.webp" data-full="assets/gal2-full.webp" alt="La misma torre desde otro ángulo, con la plataforma inferior y los arranques de pilares"></div>
+            <div class="slide"><img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAARABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDqj04NB+7TMjHWlJA70APXpRTA2O9FADXp3aiigBR0ooooA//Z) center/cover no-repeat" src="assets/gal3.webp" data-full="assets/gal3-full.webp" alt="Planos de armado de la cimentación: plantas, detalles de pedestales, secciones y alzados con la armadura acotada"></div>
+            <div class="slide"><img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAPABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDqu+KTHHWlK/Nmmt9w46mgBVII4NFRRRsEwTRTA//Z) center/cover no-repeat" src="assets/gal4.webp" data-full="assets/gal4-full.webp" alt="Planos de disposición de la torre: plantas por cotas, detalles de placas base, secciones y vista 3D del conjunto"></div>
           </div>
         </div>
         <figcaption>
