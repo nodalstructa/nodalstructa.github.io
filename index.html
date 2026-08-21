@@ -418,6 +418,14 @@
     color:#6b7682;padding:11px 0 13px;text-align:center;
   }
   .feature .body{padding:28px 30px;min-width:0;}
+  /* la figura que va bajo el texto no forma parte de la columna de imágenes:
+     ni se estira ni se centra vertical, simplemente cierra el bloque */
+  .feature .body figure{
+    margin:24px 0 0;padding:14px 14px 0;flex:none;
+    background:#fff;border:1px solid var(--rule-soft);
+  }
+  .feature .body figure img{max-width:100%;height:auto;display:block;margin:0 auto;}
+  .feature .body figcaption{padding-bottom:11px;}
   .feature.flip .shots{order:-1;border-left:0;border-right:1px solid var(--rule);}
 
   .mark{
@@ -462,13 +470,12 @@
      respuesta a "¿y esto cuánto me ahorra?". */
   /* `.tool p` y `.feature p` traen su propio color y se declaran despues, asi que
      esta regla necesita la misma especificidad para no perder el naranja. */
-  .tool .gain,.feature .gain{
+  .tool .gain{
     display:flex;align-items:baseline;gap:7px;
     font-family:var(--mono);font-size:11.5px;line-height:1.35;
     color:var(--rust);margin:0 0 12px;
   }
   .gain::before{content:"→";font-size:13px;flex:0 0 auto;}
-  .feature .gain{font-size:12.5px;margin-bottom:14px;}
 
   /* ---------- tool grid ---------- */
   .tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:18px;}
@@ -663,11 +670,8 @@
     </div>
     <p class="secsub">
       <span class="es">Combinamos la capacidad de calcular, modelar y programar, y eso es justo lo que hace falta para automatizar bien: hay que
-      haber sufrido el detalle antes de poder automatizarlo. <strong>No somos programadores que aprendieron
-      Tekla Structures: somos gente de estructuras que además desarrolla software para Tekla.</strong></span>
-      <span class="en">We combine the ability to calculate, model, and program, and that’s exactly what’s needed to automate effectively: you have to have experienced detailing firsthand before you can automate it properly. <strong>We are not
-      programmers who learned Tekla Structures — we are structural people who also develop software for
-      Tekla.</strong></span>
+      haber sufrido el detalle antes de poder automatizarlo.</span>
+      <span class="en">We combine the ability to calculate, model, and program, and that’s exactly what’s needed to automate effectively: you have to have experienced detailing firsthand before you can automate it properly.</span>
     </p>
 
     <div class="services">
@@ -678,19 +682,17 @@
       <div class="list">
         <div>
           <h4><span class="es">Detallado de estructuras</span><span class="en">Structural detailing</span></h4>
-          <p><span class="es">Modelo completo en Tekla Structures, planos de arreglo, fabricación y montaje: naves,
-          estructuras industriales, escaleras, pasarelas y barandillas — y el hormigón armado cuando el proyecto
-          lo lleva, con losas, muros y pilares despiezados barra a barra. Trabajamos con vuestros estándares de
-          perfiles, clases y series de numeración, y entregamos lo que el taller necesita para fabricar.</span>
-          <span class="en">Full Tekla Structures model plus arrangement, shop and erection drawings: industrial
-          buildings and plants, stairs, walkways and railings — and the reinforced concrete when the project calls
-          for it, with slabs, walls and columns scheduled bar by bar. We work to your standards for profiles,
-          classes and numbering series, and deliver what the shop needs to fabricate.</span></p>
+          <p><span class="es">Modelado completo en Tekla Structures desde planos de arreglo hasta fabricación y
+          montaje. Despiece de acero de refuerzo en edificios de concreto armado.</span>
+          <span class="en">Full modelling in Tekla Structures, from arrangement drawings through to fabrication
+          and erection. Rebar detailing in reinforced concrete buildings.</span></p>
         </div>
         <div>
           <h4><span class="es">Cálculo estructural</span><span class="en">Structural analysis</span></h4>
-          <p><span class="es">Dimensionado y comprobación de la estructura y sus uniones.</span>
-          <span class="en">Sizing and checking of the structure and its connections.</span></p>
+          <p><span class="es">Modelo de análisis, asignación de cargas y sus combinaciones, dimensionado de las
+          barras y comprobación de la estructura y de sus uniones.</span>
+          <span class="en">Analysis model, load assignment and load combinations, member sizing, and checking of
+          the structure and its connections.</span></p>
         </div>
         <div>
           <h4><span class="es">Automatización a medida</span><span class="en">Custom automation</span></h4>
@@ -821,11 +823,7 @@
         <figure>
           <video class="loop" loop muted playsinline autoplay preload="none" poster="assets/loop_br_poster.webp"
                  data-src="assets/loop_br.mp4"></video>
-          <figcaption><span class="es">La unión, al pinchar</span><span class="en">The connection, on pick</span></figcaption>
-        </figure>
-        <figure>
-          <img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAUABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDotSJFm5BxVTRWZlfJzSXt1JLCyGMgetVtPa4j3CEBga0Xw2M3F86Zv0VRR7srllGaKixrYlvkVrVgRVfSY1QPiiirXwsxfxo0aKKKzNT/2Q==) center/cover no-repeat" src="assets/bracket.webp" data-full="assets/bracket-full.webp" alt="Unión pilar–correa: chapa plegada angular con rigidizador y tornillos, modelada en Tekla Structures">
-          <figcaption><span class="es">Resultado en el modelo</span><span class="en">Result in the model</span></figcaption>
+          <figcaption><span class="es">La unión, 3 clics</span><span class="en">The connection, 3 clicks</span></figcaption>
         </figure>
         <figure>
           <div class="vwrap">
@@ -845,7 +843,6 @@
       <div class="body">
         <p class="mark"><b class="plg">PLG</b> <span class="es">Plugin de sistema</span><span class="en">System plugin</span></p>
         <h3>Bracket</h3>
-        <p class="gain"><span class="es">Un clic → chapa plegada, rigidizador y tornillería</span><span class="en">One click → bended plate, stiffener and bolting</span></p>
         <p>
           <span class="es">Une un pilar con una o dos correas en una sola operación. Genera la placa plegada angular,
           el rigidizador y los tornillos, con todos los parámetros expuestos en un diálogo propio
@@ -859,6 +856,10 @@
           <li><b><span class="es">Genera</span><span class="en">Creates</span></b><span class="es">Placa plegada · Rigidizador · Tornillos</span><span class="en">Bended plate · Stiffener · Bolts</span></li>
           <li><b><span class="es">Diálogo</span><span class="en">Dialog</span></b><span class="es">WinForms, atributos guardables y reutilizables</span><span class="en">WinForms, saveable reusable attributes</span></li>
         </ul>
+        <figure>
+          <img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAUABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDotSJFm5BxVTRWZlfJzSXt1JLCyGMgetVtPa4j3CEBga0Xw2M3F86Zv0VRR7srllGaKixrYlvkVrVgRVfSY1QPiiirXwsxfxo0aKKKzNT/2Q==) center/cover no-repeat" src="assets/bracket.webp" data-full="assets/bracket-full.webp" alt="Unión pilar–correa: chapa plegada angular con rigidizador y tornillos, modelada en Tekla Structures">
+          <figcaption><span class="es">Resultado en el modelo</span><span class="en">Result in the model</span></figcaption>
+        </figure>
       </div>
     </article>
 
@@ -891,7 +892,6 @@
       <div class="body">
         <p class="mark"><b class="plg">PLG</b> <span class="es">Plugin de sistema · detalle</span><span class="en">System plugin · detail</span></p>
         <h3><span class="es">Barandillas</span><span class="en">Railings</span></h3>
-        <p class="gain"><span class="es">Un punto pinchado → la barandilla completa, montantes incluidos</span><span class="en">One pick → the whole railing, posts included</span></p>
         <p>
           <span class="es">Crea una barandilla entera sobre una viga o una cadena de vigas a partir de un punto:
           reparte los montantes, resuelve los codos y las placas de base con componentes de sistema, y adapta
