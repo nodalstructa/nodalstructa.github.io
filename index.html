@@ -1552,22 +1552,30 @@
 
     // ---- ajustes ----
     // El movimiento es el mismo que en la pagina de Netlify: los numeros de la
-    // aurora y del flujo no se han tocado. Lo unico distinto son los colores,
-    // pasados a gris claro, y por eso la aurora y el CRT se mezclan de otra
-    // manera (ver los comentarios de cada uno mas abajo).
-    var GRAD_A = '#f8fafc', GRAD_B = '#e7ebf1';   // degradado de izquierda a derecha
-    var AUR_A = '#e3e9f0', AUR_B = '#d7dee8', AUR_C = '#ccd6e3';
+    // aurora y del flujo no se han tocado. Cambian los colores, pasados a gris
+    // claro, y el acabado de monitor CRT esta apagado entero (ver mas abajo).
+    // El fondo es un gris liso: los dos extremos del degradado son iguales.
+    var GRAD_A = '#e9ecf0', GRAD_B = '#e9ecf0';
+    var AUR_A = '#e0e5ec', AUR_B = '#d8dee6', AUR_C = '#cfd7e1';
     var AUR_INTENSIDAD = 74, AUR_CORTINAS = 2, AUR_VELOCIDAD = -10,
         AUR_ONDULACION = 139, AUR_RAYOS = 7, AUR_ALTURA = 120,
         AUR_CX = 0.5, AUR_CY = 0.0, AUR_SEMILLA = 81, AUR_BALANCE = 17;
-    var FL_BASE = '#dbe2ea', FL_ARRIBA = '#d0dae7', FL_ABAJO = '#c5d3e5',
-        FL_IZQ = '#d8dfe8', FL_DER = '#b7c5dd';
+    var FL_BASE = '#d2dae4', FL_ARRIBA = '#c3d0e0', FL_ABAJO = '#b5c8de',
+        FL_IZQ = '#cbd5e1', FL_DER = '#a8bcda';
     var FL_INTENSIDAD = 0.7, FL_RADIO = 1.4, FL_INERCIA = 27;
-    // CRT_MASCARA es cuanto tiñe la mascara de fosforos cada canal. Sobre color
-    // saturado el 0.1 del original no se nota; sobre gris se veria verdoso.
-    var CRT_PIXEL = 108, CRT_DESVIO = 5.2, CRT_LINEAS = 0.12, CRT_FREC = 620,
-        CRT_BRILLO = 1.0, CRT_CONTRASTE = 1.0, CRT_VINETA = 0.18, CRT_VIN_RADIO = 0.7,
-        CRT_MASCARA = 0.05;
+    // Acabado de monitor CRT, apagado. CRT_MASCARA era la mascara de fosforos:
+    // sobre color saturado no se nota, pero sobre gris liso salian rayas
+    // verticales verdes y rosas muy visibles. CRT_DESVIO es la aberracion
+    // cromatica, que tiñe los bordes de la estela. Subir cualquiera de estos
+    // valores vuelve a encender la segunda pasada de dibujo.
+    var CRT_PIXEL = 108, CRT_DESVIO = 0, CRT_LINEAS = 0, CRT_FREC = 620,
+        CRT_BRILLO = 1.0, CRT_CONTRASTE = 1.0, CRT_VINETA = 0, CRT_VIN_RADIO = 0.7,
+        CRT_MASCARA = 0;
+
+    // Si el CRT no cambia nada, la segunda pasada seria copiar la imagen tal cual,
+    // asi que se dibuja directo a la pantalla y se ahorra el trabajo.
+    var CRT_ACTIVO = CRT_DESVIO !== 0 || CRT_LINEAS !== 0 || CRT_VINETA !== 0 ||
+                     CRT_MASCARA !== 0 || CRT_BRILLO !== 1 || CRT_CONTRASTE !== 1;
 
     var N = 128;   // lado de la rejilla del fluido
 
@@ -1630,7 +1638,10 @@
       // aurora desapareceria, asi que la cortina se pinta encima con su propio
       // color y "fuerza" decide cuanto tapa. Las formas son las mismas.
       ' vec3 aur=mix(mix(aA,aB,smoothstep(0.0,0.2,g)),aC,smoothstep(0.4,0.85,g));',
-      ' float aAlfa=clamp(fuerza*aInt*0.5,0.0,1.0);',
+      // El 0.5 del original va con la mezcla screen, donde una cobertura minima
+      // ya aclara mucho sobre fondo oscuro. Sobre gris claro esa cobertura no
+      // tapaba nada, asi que se sube para que la cortina llegue a verse.
+      ' float aAlfa=clamp(fuerza*aInt*1.2,0.0,1.0);',
       ' col=mix(col,aur,aAlfa);',
       // 3. flujo del raton: media de 5 muestras del campo, como hace el original
       ' vec2 d=vec2(1.0/128.0);',
@@ -1641,7 +1652,9 @@
       ' vec4 c4=texture2D(u_campo,uv-vec2(0.0,d.y));',
       ' float tinta=(c0.b+c1.b+c2.b+c3.b+c4.b)*0.2;',
       ' vec2 vel=((c0.rg+c1.rg+c2.rg+c3.rg+c4.rg)*0.2-0.5)*2.0;',
-      ' float alfa=smoothstep(0.0,0.1,tinta);',
+      // Tras promediar las 5 muestras la tinta se queda en torno a 0.03, asi que
+      // con el umbral de 0.1 del original la estela apenas asomaba sobre el gris.
+      ' float alfa=smoothstep(0.0,0.04,tinta);',
       ' float mag=length(vel);',
       ' float G=smoothstep(0.01,0.1,mag);',
       ' vec2 dir=vel/(mag+0.001);',
@@ -1874,12 +1887,14 @@
       gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, texCampo);
       gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texEscena);
 
-      gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, CRT_ACTIVO ? fbo : null);
       gl.viewport(0, 0, anchoPx, altoPx);
       gl.useProgram(pr1);
       gl.uniform2f(U(pr1,'u_res'), anchoPx, altoPx);
       gl.uniform1f(U(pr1,'u_t'), reloj);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      if (!CRT_ACTIVO) return;
 
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       gl.viewport(0, 0, anchoPx, altoPx);
