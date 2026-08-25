@@ -192,17 +192,17 @@
     padding:18px 36px;
   }
   .contactbar > span{font-family:var(--mono);font-size:12.5px;color:var(--ink-faint);}
-  .contactbar .copy{
+  .contactos .copy{
     display:inline-flex;align-items:baseline;gap:9px;
     background:transparent;border:0;padding:0;cursor:pointer;font:inherit;
     color:var(--accent);
   }
-  .contactbar .copy .addr{font-weight:600;border-bottom:1px solid currentColor;}
-  .contactbar .copy .hint{
+  .contactos .copy .addr{font-weight:600;border-bottom:1px solid currentColor;}
+  .contactos .copy .hint{
     font-family:var(--mono);font-size:10px;letter-spacing:.13em;
     text-transform:uppercase;color:var(--ink-faint);
   }
-  .contactbar .copy:hover{color:var(--rust);}
+  .contactos .copy:hover{color:var(--rust);}
   .copy:focus-visible{outline:2px solid var(--rust);outline-offset:3px;}
   .copy.done .hint{color:var(--rust);}
 
@@ -690,7 +690,7 @@
       </div>
     </dl>
 
-    <div class="contactbar">
+    <div class="contactbar contactos">
       <button type="button" class="copy" data-copy="nodalstructa@gmail.com">
         <span class="addr">nodalstructa@gmail.com</span>
         <span class="hint" aria-hidden="true"><span class="es">copiar</span><span class="en">copy</span></span>
@@ -1340,14 +1340,17 @@
         <span class="es">Cuéntanoslo y lo automatizamos.</span>
         <span class="en">Tell us about it and we'll automate it.</span>
       </p>
-      <div class="ctarow">
-        <button type="button" class="btn copy" data-copy="nodalstructa@gmail.com">
-          <span class="es">Copiar correo</span><span class="en">Copy email</span>
+      <div class="ctarow contactos">
+        <button type="button" class="copy" data-copy="nodalstructa@gmail.com">
+          <span class="addr">nodalstructa@gmail.com</span>
+          <span class="hint" aria-hidden="true"><span class="es">copiar</span><span class="en">copy</span></span>
         </button>
-        <a class="btn ghost" href="https://api.whatsapp.com/send?phone=34665850897" target="_blank" rel="noopener">
-          <span class="es">Escribir por WhatsApp</span><span class="en">Message on WhatsApp</span>
+        <a class="mailto" href="mailto:nodalstructa@gmail.com?subject=Automatización%20en%20Tekla%20Structures">
+          <span class="es">Escribir</span><span class="en">Write</span>
         </a>
-        <span class="ctamail">nodalstructa@gmail.com · +34 665 850 897</span>
+        <a class="wa" href="https://api.whatsapp.com/send?phone=34665850897" target="_blank" rel="noopener">
+          WhatsApp · +34 665 850 897
+        </a>
       </div>
     </div>
 
