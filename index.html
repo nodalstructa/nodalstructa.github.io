@@ -572,12 +572,13 @@
   .secnav a:hover{background:var(--surface-2);color:var(--rust);}
   .secnav a:focus-visible{outline:2px solid var(--rust);outline-offset:-2px;}
 
-  .mailto{
+  .mailto,.wa{
     font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
     color:var(--rust);text-decoration:none;border:1px solid var(--rule);padding:5px 11px;
+    white-space:nowrap;
   }
-  .mailto:hover{background:var(--rust);color:#fff;border-color:var(--rust);}
-  .mailto:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .mailto:hover,.wa:hover{background:var(--rust);color:#fff;border-color:var(--rust);}
+  .mailto:focus-visible,.wa:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 
   /* ---------- cifras de ahorro, junto a la entrada de la seccion ---------- */
   .procintro{
@@ -692,6 +693,9 @@
       <a class="mailto" href="mailto:nodalstructa@gmail.com?subject=Automatización%20en%20Tekla%20Structures">
         <span class="es">Escribir</span><span class="en">Write</span>
       </a>
+      <a class="wa" href="https://wa.me/34665850897" target="_blank" rel="noopener">
+        WhatsApp · +34 665 850 897
+      </a>
       <span class="es">Presupuesto cerrado por herramienta o por horas</span>
       <span class="en">Fixed price per tool, or hourly</span>
     </div>
@@ -699,11 +703,11 @@
 
   <nav class="secnav" aria-label="Secciones">
     <a href="#servicios"><span class="es">Servicios</span><span class="en">Services</span></a>
-    <a href="#paraquien"><span class="es">¿Para quién?</span><span class="en">Who it is for</span></a>
-    <a href="#proceso"><span class="es">Cómo trabajamos</span><span class="en">How we work</span></a>
     <a href="#componentes"><span class="es">Componentes</span><span class="en">Components</span></a>
     <a href="#trabajos"><span class="es">Proyectos</span><span class="en">Projects</span></a>
     <a href="#catalogo"><span class="es">Catálogo</span><span class="en">Catalogue</span></a>
+    <a href="#paraquien"><span class="es">¿Para quién?</span><span class="en">Who it is for</span></a>
+    <a href="#proceso"><span class="es">Cómo trabajamos</span><span class="en">How we work</span></a>
     <a href="#contacto"><span class="es">Contacto</span><span class="en">Contact</span></a>
   </nav>
 
@@ -750,116 +754,9 @@
     </div>
   </section>
 
-  <section id="paraquien">
-    <div class="sechead">
-      <span class="num">02</span>
-      <h2><span class="es">¿Para quién?</span><span class="en">Who it is for</span></h2>
-    </div>
-    <p class="secsub">
-      <span class="es">Trabajamos con quien vive dentro del modelo: oficinas que detallan a diario y empresas que
-      fabrican lo que sale de ese modelo.</span>
-      <span class="en">We work with the people who live inside the model: offices that detail every day and
-      companies that fabricate what comes out of that model.</span>
-    </p>
-
-    <div class="caps">
-      <div>
-        <h4><span class="es">Oficinas de ingeniería</span><span class="en">Engineering offices</span></h4>
-        <p><span class="es">Automatización de procesos repetitivos de modelado y detallado.</span>
-        <span class="en">Automation of repetitive modelling and detailing processes.</span></p>
-      </div>
-      <div>
-        <h4><span class="es">Empresas de estructuras</span><span class="en">Structural fabricators</span></h4>
-        <p><span class="es">Herramientas para acelerar la preparación del modelo, planos y fabricación.</span>
-        <span class="en">Tools that speed up model preparation, drawings and fabrication.</span></p>
-      </div>
-      <div>
-        <h4><span class="es">Detallistas Tekla Structures</span><span class="en">Tekla Structures detailers</span></h4>
-        <p><span class="es">Componentes y macros adaptados a diferentes estándares: perfiles, clases, series de
-        numeración y criterios de taller.</span>
-        <span class="en">Components and macros adapted to different standards: profiles, classes, numbering
-        series and shop criteria.</span></p>
-      </div>
-      <div>
-        <h4><span class="es">Ingenierías</span><span class="en">Engineering firms</span></h4>
-        <p><span class="es">Automatización de estructuras de proceso, plataformas, escaleras, barandillas y
-        conexiones.</span>
-        <span class="en">Automation of process structures, platforms, stairs, railings and connections.</span></p>
-      </div>
-    </div>
-  </section>
-
-  <section id="proceso">
-    <div class="sechead">
-      <span class="num">03</span>
-      <h2><span class="es">Cómo trabajamos</span><span class="en">How we work</span></h2>
-    </div>
-    <div class="procintro">
-      <p class="secsub">
-        <span class="es">De la tarea manual a una herramienta instalada en todos los puestos. El presupuesto se
-        cierra al definir la funcionalidad de la herramienta y los casos que resuelve.</span>
-        <span class="en">From the manual task to a tool installed on every workstation. The price is fixed once
-        the tool's functionality and the cases it covers are defined.</span>
-      </p>
-      <div class="cifras">
-        <div>
-          <b>30 min <i>→</i> 1 clic</b>
-        </div>
-        <div>
-          <b>≈ 40 %</b>
-          <span class="es">más rápido</span><span class="en">faster</span>
-        </div>
-      </div>
-    </div>
-    <div class="steps">
-      <div>
-        <b class="stepnum">01</b>
-        <h4><span class="es">Detectamos la tarea repetitiva</span><span class="en">We spot the repetitive task</span></h4>
-        <p><span class="es">La empresa nos enseña qué proceso resuelve hoy manualmente y cuántas veces lo
-        repite en un proyecto.</span>
-        <span class="en">The company shows us which process it resolves manually today, and how many times
-        it repeats it in a project.</span></p>
-      </div>
-      <div>
-        <b class="stepnum">02</b>
-        <h4><span class="es">Analizamos la lógica</span><span class="en">We analyse the logic</span></h4>
-        <p><span class="es">Geometría, reglas, excepciones, parámetros y criterios de fabricación.</span>
-        <span class="en">Geometry, rules, exceptions, parameters and fabrication criteria.</span></p>
-      </div>
-      <div>
-        <b class="stepnum">03</b>
-        <h4><span class="es">Desarrollamos la herramienta</span><span class="en">We build the tool</span></h4>
-        <p><span class="es">C#/.NET con Tekla Open API cuando el criterio es estable y merece un componente.</span>
-        <span class="en">C#/.NET on the Tekla Open API when the rule is stable and deserves a component.</span></p>
-      </div>
-      <div>
-        <b class="stepnum">04</b>
-        <h4><span class="es">Probamos sobre modelos reales</span><span class="en">We test on real models</span></h4>
-        <p><span class="es">Validación con distintas geometrías y situaciones, sobre el modelo del propio
-        proyecto y no sobre un ejemplo de laboratorio.</span>
-        <span class="en">Validation across different geometries and situations, on the project's own model
-        rather than a laboratory example.</span></p>
-      </div>
-      <div>
-        <b class="stepnum">05</b>
-        <h4><span class="es">Entregamos e instalamos</span><span class="en">We deliver and install</span></h4>
-        <p><span class="es">TSEP, instalador y configuración para toda la oficina, en las versiones que se
-        estén usando.</span>
-        <span class="en">TSEP, installer and configuration for the whole office, across the versions in
-        use.</span></p>
-      </div>
-      <div>
-        <b class="stepnum">06</b>
-        <h4><span class="es">Soporte y mejoras</span><span class="en">Support and improvements</span></h4>
-        <p><span class="es">Adaptación a nuevas versiones y a las necesidades del siguiente proyecto.</span>
-        <span class="en">Adaptation to new versions and to the needs of the next project.</span></p>
-      </div>
-    </div>
-  </section>
-
   <section id="componentes">
     <div class="sechead">
-      <span class="num">04</span>
+      <span class="num">02</span>
       <h2><span class="es">Componentes destacados</span><span class="en">Selected components</span></h2>
     </div>
     <p class="secsub">
@@ -961,7 +858,7 @@
 
   <section id="trabajos">
     <div class="sechead">
-      <span class="num">05</span>
+      <span class="num">03</span>
       <h2><span class="es">Proyectos destacados</span><span class="en">Selected projects</span></h2>
     </div>
     <p class="secsub">
@@ -1126,7 +1023,7 @@
 
   <section id="catalogo">
     <div class="sechead">
-      <span class="num">06</span>
+      <span class="num">04</span>
       <h2><span class="es">Catálogo</span><span class="en">Catalogue</span></h2>
     </div>
     <p class="secsub">
@@ -1295,7 +1192,7 @@
 
   <section id="capacidades">
     <div class="sechead">
-      <span class="num">07</span>
+      <span class="num">05</span>
       <h2><span class="es">Lo que hacemos</span><span class="en">What we build</span></h2>
     </div>
     <div class="caps">
@@ -1343,6 +1240,113 @@
         fabricación lo que hoy se detecta en el taller.</span>
         <span class="en">Automated checks over the model and drawings, catching before fabrication what today
         gets caught in the shop.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="paraquien">
+    <div class="sechead">
+      <span class="num">06</span>
+      <h2><span class="es">¿Para quién?</span><span class="en">Who it is for</span></h2>
+    </div>
+    <p class="secsub">
+      <span class="es">Trabajamos con quien vive dentro del modelo: oficinas que detallan a diario y empresas que
+      fabrican lo que sale de ese modelo.</span>
+      <span class="en">We work with the people who live inside the model: offices that detail every day and
+      companies that fabricate what comes out of that model.</span>
+    </p>
+
+    <div class="caps">
+      <div>
+        <h4><span class="es">Oficinas de ingeniería</span><span class="en">Engineering offices</span></h4>
+        <p><span class="es">Automatización de procesos repetitivos de modelado y detallado.</span>
+        <span class="en">Automation of repetitive modelling and detailing processes.</span></p>
+      </div>
+      <div>
+        <h4><span class="es">Empresas de estructuras</span><span class="en">Structural fabricators</span></h4>
+        <p><span class="es">Herramientas para acelerar la preparación del modelo, planos y fabricación.</span>
+        <span class="en">Tools that speed up model preparation, drawings and fabrication.</span></p>
+      </div>
+      <div>
+        <h4><span class="es">Detallistas Tekla Structures</span><span class="en">Tekla Structures detailers</span></h4>
+        <p><span class="es">Componentes y macros adaptados a diferentes estándares: perfiles, clases, series de
+        numeración y criterios de taller.</span>
+        <span class="en">Components and macros adapted to different standards: profiles, classes, numbering
+        series and shop criteria.</span></p>
+      </div>
+      <div>
+        <h4><span class="es">Ingenierías</span><span class="en">Engineering firms</span></h4>
+        <p><span class="es">Automatización de estructuras de proceso, plataformas, escaleras, barandillas y
+        conexiones.</span>
+        <span class="en">Automation of process structures, platforms, stairs, railings and connections.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="proceso">
+    <div class="sechead">
+      <span class="num">07</span>
+      <h2><span class="es">Cómo trabajamos</span><span class="en">How we work</span></h2>
+    </div>
+    <div class="procintro">
+      <p class="secsub">
+        <span class="es">De la tarea manual a una herramienta instalada en todos los puestos. El presupuesto se
+        cierra al definir la funcionalidad de la herramienta y los casos que resuelve.</span>
+        <span class="en">From the manual task to a tool installed on every workstation. The price is fixed once
+        the tool's functionality and the cases it covers are defined.</span>
+      </p>
+      <div class="cifras">
+        <div>
+          <b>30 min <i>→</i> 1 clic</b>
+        </div>
+        <div>
+          <b>≈ 40 %</b>
+          <span class="es">más rápido</span><span class="en">faster</span>
+        </div>
+      </div>
+    </div>
+    <div class="steps">
+      <div>
+        <b class="stepnum">01</b>
+        <h4><span class="es">Detectamos la tarea repetitiva</span><span class="en">We spot the repetitive task</span></h4>
+        <p><span class="es">La empresa nos enseña qué proceso resuelve hoy manualmente y cuántas veces lo
+        repite en un proyecto.</span>
+        <span class="en">The company shows us which process it resolves manually today, and how many times
+        it repeats it in a project.</span></p>
+      </div>
+      <div>
+        <b class="stepnum">02</b>
+        <h4><span class="es">Analizamos la lógica</span><span class="en">We analyse the logic</span></h4>
+        <p><span class="es">Geometría, reglas, excepciones, parámetros y criterios de fabricación.</span>
+        <span class="en">Geometry, rules, exceptions, parameters and fabrication criteria.</span></p>
+      </div>
+      <div>
+        <b class="stepnum">03</b>
+        <h4><span class="es">Desarrollamos la herramienta</span><span class="en">We build the tool</span></h4>
+        <p><span class="es">C#/.NET con Tekla Open API cuando el criterio es estable y merece un componente.</span>
+        <span class="en">C#/.NET on the Tekla Open API when the rule is stable and deserves a component.</span></p>
+      </div>
+      <div>
+        <b class="stepnum">04</b>
+        <h4><span class="es">Probamos sobre modelos reales</span><span class="en">We test on real models</span></h4>
+        <p><span class="es">Validación con distintas geometrías y situaciones, sobre el modelo del propio
+        proyecto y no sobre un ejemplo de laboratorio.</span>
+        <span class="en">Validation across different geometries and situations, on the project's own model
+        rather than a laboratory example.</span></p>
+      </div>
+      <div>
+        <b class="stepnum">05</b>
+        <h4><span class="es">Entregamos e instalamos</span><span class="en">We deliver and install</span></h4>
+        <p><span class="es">TSEP, instalador y configuración para toda la oficina, en las versiones que se
+        estén usando.</span>
+        <span class="en">TSEP, installer and configuration for the whole office, across the versions in
+        use.</span></p>
+      </div>
+      <div>
+        <b class="stepnum">06</b>
+        <h4><span class="es">Soporte y mejoras</span><span class="en">Support and improvements</span></h4>
+        <p><span class="es">Adaptación a nuevas versiones y a las necesidades del siguiente proyecto.</span>
+        <span class="en">Adaptation to new versions and to the needs of the next project.</span></p>
       </div>
     </div>
   </section>
