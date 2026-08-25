@@ -49,12 +49,6 @@
     --rule:       #c3c9d2;
     --rule-soft:  #dde1e7;
     --shadow:     0 1px 2px rgba(16,23,32,.06), 0 8px 24px -12px rgba(16,23,32,.18);
-    --f1:         #eef1f5;   /* fondo fluido: base             */
-    --f2:         #dae6ef;   /* fondo fluido: medio            */
-    --f3:         #c2d9e9;   /* fondo fluido: cortinas de luz  */
-    --f4:         #bcc6ec;   /* fondo fluido: estela del raton */
-    --raya:       .018;      /* rayado vertical del acabado    */
-    --vineta:     .06;       /* oscurecido de los bordes       */
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
@@ -71,12 +65,6 @@
       --rule:       #2c3844;
       --rule-soft:  #222c37;
       --shadow:     0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
-      --f1:         #090f16;
-      --f2:         #10293d;
-      --f3:         #1d6f96;
-      --f4:         #33357f;
-      --raya:       .055;
-      --vineta:     .40;
     }
   }
   :root[data-theme="dark"]{
@@ -93,12 +81,26 @@
     --rule:       #2c3844;
     --rule-soft:  #222c37;
     --shadow:     0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
-    --f1:         #090f16;
-    --f2:         #10293d;
-    --f3:         #1d6f96;
-    --f4:         #33357f;
-    --raya:       .055;
-    --vineta:     .40;
+  }
+
+  /* El fondo fluido es oscuro siempre: turquesa a la izquierda y casi negro a la
+     derecha. Por eso la pagina usa la paleta de texto claro pase lo que pase el
+     sistema, igual que hace la pagina de Netlify, que pone el texto en blanco
+     encima de ese mismo fondo. Para volver al tema automatico, borra este bloque. */
+  :root{
+    --ink:        #e3e9f0;
+    --ink-soft:   #a3b0bd;
+    --ink-faint:  #74828f;
+    --ground:     #0c1219;
+    --surface:    #141c25;
+    --surface-2:  #1a232e;
+    --accent:     #56aada;
+    --accent-2:   #8ccbee;
+    --rust:       #e0954f;
+    --gh:         #7aa653;
+    --rule:       #2c3844;
+    --rule-soft:  #222c37;
+    --shadow:     0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
   }
 
   /* ---------- type ---------- */
@@ -124,18 +126,6 @@
     position:fixed;inset:0;z-index:0;display:block;
     width:100%;height:100%;pointer-events:none;
     background:var(--ground);
-  }
-  /* Rayado vertical y vineta, por encima del lienzo. Van en CSS y no dentro del
-     shader porque el lienzo se pinta a media resolucion: ahi las lineas finas
-     saldrian con moire, y aqui salen nitidas y no cuestan nada. */
-  body::before{
-    content:"";
-    position:fixed;inset:0;z-index:1;pointer-events:none;
-    background:
-      repeating-linear-gradient(90deg,
-        rgba(0,0,0,var(--raya)) 0 1px, transparent 1px 3px),
-      radial-gradient(125% 95% at 50% 42%,
-        transparent 34%, rgba(0,0,0,var(--vineta)) 100%);
   }
   .wrap,.secnav{position:relative;z-index:2;}
 
@@ -1537,13 +1527,21 @@
 
 
   /* ---------- fondo fluido ----------
-     Tres capas, como en app.netlify.com/drop: ruido con deformacion de dominio,
-     cortinas de luz que caen desde arriba mezcladas en modo "screen", y una estela
-     que empuja el fluido hacia donde se mueve el raton y sigue corriendo un rato
-     despues de parar. El rayado y la vineta van en CSS, no aqui.
-     Se dibuja a media resolucion (el ruido es de baja frecuencia, no se nota) y se
-     detiene cuando la pestana no esta visible. Si el navegador no da WebGL, no pasa
-     nada: queda el color plano y la pagina se lee igual. */
+     Cuatro capas apiladas, con la misma receta que usa app.netlify.com/drop:
+
+       1. Degradado horizontal, de turquesa a morado.
+       2. Aurora: dos cortinas de luz que ondulan, mezcladas en modo "screen".
+       3. Flujo del raton: una SIMULACION DE FLUIDO de verdad. Un campo de
+          velocidad de 128x128 al que el cursor inyecta empuje; cada cuadro la
+          tinta se arrastra siguiendo ese campo (adveccion semilagrangiana) y
+          se apaga poco a poco. El color sale de HACIA DONDE fluye, no de donde
+          esta el raton: arriba, abajo, izquierda y derecha tienen su tono.
+       4. Acabado de monitor CRT: aberracion cromatica, mascara vertical de
+          fosforos, lineas de barrido y viñeta, mezclado en modo "overlay".
+
+     Se pinta en dos pasadas porque el CRT necesita leer el resultado de las
+     tres capas de debajo. Todo a media resolucion, ~30 cuadros por segundo, y
+     parado cuando la pestaña no se ve. Si no hay WebGL queda el color plano. */
   (function(){
     var lienzo = document.getElementById('fondo');
     if (!lienzo) return;
@@ -1551,134 +1549,354 @@
           || lienzo.getContext('experimental-webgl');
     if (!gl) return;
 
+    // ---- ajustes (los mismos valores que trae la pagina de Netlify) ----
+    var GRAD_A = '#1bc5c3', GRAD_B = '#371e71';
+    var AUR_A = '#04a29f', AUR_B = '#32e6e2', AUR_C = '#0ff0e1';
+    var AUR_INTENSIDAD = 74, AUR_CORTINAS = 2, AUR_VELOCIDAD = -10,
+        AUR_ONDULACION = 139, AUR_RAYOS = 7, AUR_ALTURA = 120,
+        AUR_CX = 0.5, AUR_CY = 0.0, AUR_SEMILLA = 81, AUR_BALANCE = 17;
+    var FL_BASE = '#02807d', FL_ARRIBA = '#04a29f', FL_ABAJO = '#0cb9e4',
+        FL_IZQ = '#4ac4c2', FL_DER = '#1f36e5';
+    var FL_INTENSIDAD = 0.7, FL_RADIO = 1.4, FL_INERCIA = 27;
+    var CRT_PIXEL = 108, CRT_DESVIO = 5.2, CRT_LINEAS = 0.2, CRT_FREC = 620,
+        CRT_BRILLO = 1.1, CRT_CONTRASTE = 1.0, CRT_VINETA = 1.0, CRT_VIN_RADIO = 0.7;
+
+    var N = 128;   // lado de la rejilla del fluido
+
+    function hex(s){
+      var n = parseInt(s.slice(1), 16);
+      return [((n>>16)&255)/255, ((n>>8)&255)/255, (n&255)/255];
+    }
+
     var VS = 'attribute vec2 pos;void main(){gl_Position=vec4(pos,0.0,1.0);}';
-    var FS = [
+
+    // ---- pasada 1: degradado + aurora + flujo ----
+    var FS1 = [
       'precision mediump float;',
-      'uniform vec2 u_res; uniform float u_t; uniform vec2 u_m; uniform vec2 u_v; uniform float u_amp;',
-      'uniform vec3 c1; uniform vec3 c2; uniform vec3 c3; uniform vec3 c4;',
-      'float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}',
-      'float ruido(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.0-2.0*f);',
-      ' return mix(mix(hash(i),hash(i+vec2(1.0,0.0)),u.x),mix(hash(i+vec2(0.0,1.0)),hash(i+vec2(1.0,1.0)),u.x),u.y);}',
-      'float fbm(vec2 p){float v=0.0,a=0.5;for(int i=0;i<5;i++){v+=a*ruido(p);p*=2.02;a*=0.5;}return v;}',
+      'uniform vec2 u_res; uniform float u_t;',
+      'uniform sampler2D u_campo;',
+      'uniform vec3 gA,gB, aA,aB,aC, fBase,fArr,fAba,fIzq,fDer;',
+      'uniform float aInt,aOnd,aRay,aAlt,aCx,aCy,aSem,aBal;',
+      'float h3(vec3 p){return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5453123);}',
+      'float ruido3(vec3 p){vec3 i=floor(p),f=fract(p);vec3 u=f*f*(3.0-2.0*f);',
+      ' float a=mix(mix(mix(h3(i),h3(i+vec3(1.0,0.0,0.0)),u.x),mix(h3(i+vec3(0.0,1.0,0.0)),h3(i+vec3(1.0,1.0,0.0)),u.x),u.y),',
+      '   mix(mix(h3(i+vec3(0.0,0.0,1.0)),h3(i+vec3(1.0,0.0,1.0)),u.x),mix(h3(i+vec3(0.0,1.0,1.0)),h3(i+vec3(1.0,1.0,1.0)),u.x),u.y),u.z);',
+      ' return a*2.0-1.0;}',
+      'float fase(float a,float k,float m){return fract(sin(a*k)*m)*6.2831853;}',
+      // una cortina de aurora: devuelve (altura normalizada, intensidad)
+      'vec2 cortina(vec2 uv,float ar,float idx,float des){',
+      ' float i=u_t*0.06+des;',
+      ' float a=aSem+idx*31.7;',
+      ' float s=(uv.x-aCx)*ar*2.0;',
+      ' float u=sin(s*0.7+i*0.4+fase(a,12.9,4758.5))*0.15',
+      '  +sin(s*1.6+i*0.65+fase(a,78.2,2847.1))*0.08',
+      '  +sin(s*2.9+i*0.3+fase(a,41.6,1593.7))*0.04;',
+      ' float h=ruido3(vec3(s*0.5,i*0.25,a*0.1));',
+      ' float c=aCy+u*aOnd+h*0.14*aOnd;',
+      ' float p=s+h*2.5;',
+      ' float m=mix(6.0,20.0,aRay);',
+      ' float M=pow(sin(p*(m*0.15)+i*0.1+fase(a,53.7,3847.2))*0.5+0.5,1.5);',
+      ' float E=aAlt*mix(0.4,1.0,M);',
+      ' float w=uv.y-c;',
+      ' float R=smoothstep(-0.04,0.015,w);',
+      ' float A=E*(M*0.4+0.6);',
+      ' float C=1.0-smoothstep(0.0,A,w);',
+      ' float P=mix(0.4,1.0,h*0.5+0.5);',
+      ' float L=clamp(w/(A+0.001),0.0,1.0);',
+      ' float I=L-0.2;',
+      ' float U=exp(I*I*-6.0)*0.3+1.0;',
+      ' return vec2(L,R*C*M*P*U);}',
       'void main(){',
-      ' float ar=u_res.x/u_res.y;',
       ' vec2 uv=gl_FragCoord.xy/u_res;',
-      ' vec2 p=vec2(uv.x*ar,uv.y);',
-      ' float dm=distance(p,vec2(u_m.x*ar,u_m.y));',
-      ' float halo=exp(-dm*dm*3.5);',
-      ' vec2 empuje=u_v*halo*0.60;',
-      ' vec2 q=vec2(fbm(p*1.6+u_t*0.10-empuje),fbm(p*1.6+vec2(5.2,1.3)-u_t*0.08-empuje));',
-      ' vec2 r=vec2(fbm(p*1.6+2.2*q+vec2(1.7,9.2)+u_t*0.07),fbm(p*1.6+2.2*q+vec2(8.3,2.8)-u_t*0.05));',
-      ' float f=fbm(p*1.6+2.2*r);',
-      ' vec3 col=mix(c1,c2,clamp(f*1.6,0.0,1.0));',
-      ' vec2 rel=vec2((uv.x-0.5)*ar,uv.y-1.0);',
-      ' float ang=atan(rel.x,-rel.y+0.002);',
-      ' float ondul=fbm(vec2(ang*2.4,u_t*0.09))*1.4;',
-      ' float rayo=max(sin(ang*7.0+ondul*3.2-u_t*0.30),0.0);',
-      ' rayo=rayo*rayo*exp(-length(rel)*1.6);',
-      ' vec3 luz=mix(c3,c4,0.5+0.5*sin(ang*2.0+u_t*0.15));',
-      ' col=1.0-(1.0-col)*(1.0-luz*rayo*0.45);',
-      ' vec3 tinte=mix(c3,c4,clamp(0.5+u_v.x*1.1,0.0,1.0));',
-      ' tinte=mix(tinte,c2,clamp(0.5-u_v.y*1.1,0.0,1.0)*0.45);',
-      ' col=mix(col,tinte,halo*u_amp*0.55);',
+      ' float ar=u_res.x/max(u_res.y,1.0);',
+      // 1. degradado horizontal
+      ' vec3 col=mix(gA,gB,clamp(uv.x,0.0,1.0));',
+      // 2. aurora, mezcla screen
+      ' float alt=0.0, fuerza=0.0;',
+      ' vec2 k0=cortina(uv,ar,0.0,0.0);',
+      ' alt+=k0.x*k0.y; fuerza+=k0.y;',
+      ' vec2 k1=cortina(uv,ar,1.0,3.1);',
+      ' float p1=k1.y*0.65; alt+=k1.x*p1; fuerza+=p1;',
+      ' float g=pow(alt/(fuerza+0.001),aBal);',
+      ' vec3 aur=clamp(mix(mix(aA,aB,smoothstep(0.0,0.2,g)),aC,smoothstep(0.4,0.85,g))*fuerza*aInt,0.0,1.0);',
+      ' float aAlfa=clamp(fuerza*aInt*0.5,0.0,1.0);',
+      ' col=mix(col,col+aur-col*aur,aAlfa);',
+      // 3. flujo del raton: media de 5 muestras del campo, como hace el original
+      ' vec2 d=vec2(1.0/128.0);',
+      ' vec4 c0=texture2D(u_campo,uv);',
+      ' vec4 c1=texture2D(u_campo,uv+vec2(d.x,0.0));',
+      ' vec4 c2=texture2D(u_campo,uv+vec2(0.0,d.y));',
+      ' vec4 c3=texture2D(u_campo,uv-vec2(d.x,0.0));',
+      ' vec4 c4=texture2D(u_campo,uv-vec2(0.0,d.y));',
+      ' float tinta=(c0.b+c1.b+c2.b+c3.b+c4.b)*0.2;',
+      ' vec2 vel=((c0.rg+c1.rg+c2.rg+c3.rg+c4.rg)*0.2-0.5)*2.0;',
+      ' float alfa=smoothstep(0.0,0.1,tinta);',
+      ' float mag=length(vel);',
+      ' float G=smoothstep(0.01,0.1,mag);',
+      ' vec2 dir=vel/(mag+0.001);',
+      ' float der=smoothstep(0.0,0.7,max(dir.x,0.0));',
+      ' float izq=smoothstep(0.0,0.7,max(-dir.x,0.0));',
+      ' float arr=smoothstep(0.0,0.7,max(dir.y,0.0));',
+      ' float aba=smoothstep(0.0,0.7,max(-dir.y,0.0));',
+      ' float Q=izq+der, Z=arr+aba, J=Q+Z+0.001;',
+      ' vec3 hor=fIzq*izq+fDer*der;',
+      ' vec3 ver=fAba*aba+fArr*arr;',
+      ' vec3 flujo=mix(fBase,hor*(Q/J)+ver*(Z/J),G);',
+      ' col=mix(col,flujo,alfa);',
       ' gl_FragColor=vec4(col,1.0);}'
+    ].join('\n');
+
+    // ---- pasada 2: acabado CRT sobre el resultado anterior ----
+    var FS2 = [
+      'precision mediump float;',
+      'uniform vec2 u_res; uniform sampler2D u_tex;',
+      'uniform float cPix,cDes,cLin,cFrec,cBri,cCon,cVin,cVinR;',
+      'vec3 sobre(vec3 b,vec3 s){',
+      ' return mix(2.0*b*s,1.0-2.0*(1.0-b)*(1.0-s),step(0.5,b));}',
+      'void main(){',
+      ' vec2 uv=gl_FragCoord.xy/u_res;',
+      ' vec3 base=texture2D(u_tex,uv).rgb;',
+      // aberracion cromatica: cada canal se lee con un desplazamiento distinto
+      ' float h=cDes*0.002;',
+      ' vec3 c=vec3(texture2D(u_tex,uv+vec2(h,0.0)).r,',
+      '             texture2D(u_tex,uv).g,',
+      '             texture2D(u_tex,uv-vec2(h,0.0)).b);',
+      ' c=((c-0.5)*cCon+0.5)*cBri;',
+      // lineas de barrido. A esta frecuencia caen por debajo de un pixel, asi
+      // que se mezclan con su propia media para que no salga moire.
+      ' float ciclos=cFrec/max(u_res.y,1.0);',
+      ' float s=sin(uv.y*cFrec*6.2831853)*0.5+0.5;',
+      ' s=mix(s,0.5,clamp(ciclos*2.0,0.0,1.0));',
+      ' c*=1.0-cLin*s;',
+      // mascara de fosforos: las rayas verticales finas
+      ' float f=fract(uv.x*cPix*0.5)*6.2831853;',
+      ' c*=vec3(sin(f)*0.1+0.95,sin(f+2.09)*0.1+0.95,sin(f+4.18)*0.1+0.95);',
+      // viñeta
+      ' float ar=u_res.x/max(u_res.y,1.0);',
+      ' vec2 q=uv-0.5;',
+      ' float r=length(vec2(q.x*ar,q.y));',
+      ' float i0=1.0-cVinR*0.9;',
+      ' float v=1.0-smoothstep(i0,i0+0.5,r);',
+      ' c*=mix(1.0,v,cVin);',
+      ' gl_FragColor=vec4(clamp(sobre(base,clamp(c,0.0,1.0)),0.0,1.0),1.0);}'
     ].join('\n');
 
     function compilar(tipo, src){
       var s = gl.createShader(tipo); gl.shaderSource(s, src); gl.compileShader(s);
       return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null;
     }
-    var vs = compilar(gl.VERTEX_SHADER, VS), fs = compilar(gl.FRAGMENT_SHADER, FS);
-    if (!vs || !fs) return;
-    var prog = gl.createProgram();
-    gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
-    gl.useProgram(prog);
+    function programa(fsSrc){
+      var vs = compilar(gl.VERTEX_SHADER, VS), fs = compilar(gl.FRAGMENT_SHADER, fsSrc);
+      if (!vs || !fs) return null;
+      var p = gl.createProgram();
+      gl.attachShader(p, vs); gl.attachShader(p, fs); gl.linkProgram(p);
+      return gl.getProgramParameter(p, gl.LINK_STATUS) ? p : null;
+    }
+    var pr1 = programa(FS1), pr2 = programa(FS2);
+    if (!pr1 || !pr2) return;
 
     var buf = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,3,-1,-1,3]), gl.STATIC_DRAW);
-    var loc = gl.getAttribLocation(prog, 'pos');
-    gl.enableVertexAttribArray(loc);
-    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    [pr1, pr2].forEach(function(p){
+      var l = gl.getAttribLocation(p, 'pos');
+      gl.useProgram(p); gl.enableVertexAttribArray(l);
+      gl.vertexAttribPointer(l, 2, gl.FLOAT, false, 0, 0);
+    });
+    function U(p, n){ return gl.getUniformLocation(p, n); }
 
-    var uRes = gl.getUniformLocation(prog,'u_res'), uT = gl.getUniformLocation(prog,'u_t'),
-        uM = gl.getUniformLocation(prog,'u_m'), uV = gl.getUniformLocation(prog,'u_v'),
-        uAmp = gl.getUniformLocation(prog,'u_amp'),
-        u1 = gl.getUniformLocation(prog,'c1'), u2 = gl.getUniformLocation(prog,'c2'),
-        u3 = gl.getUniformLocation(prog,'c3'), u4 = gl.getUniformLocation(prog,'c4');
+    // ---- constantes de la pasada 1 ----
+    gl.useProgram(pr1);
+    gl.uniform3fv(U(pr1,'gA'), hex(GRAD_A));   gl.uniform3fv(U(pr1,'gB'), hex(GRAD_B));
+    gl.uniform3fv(U(pr1,'aA'), hex(AUR_A));    gl.uniform3fv(U(pr1,'aB'), hex(AUR_B));
+    gl.uniform3fv(U(pr1,'aC'), hex(AUR_C));
+    gl.uniform3fv(U(pr1,'fBase'), hex(FL_BASE));
+    gl.uniform3fv(U(pr1,'fArr'), hex(FL_ARRIBA)); gl.uniform3fv(U(pr1,'fAba'), hex(FL_ABAJO));
+    gl.uniform3fv(U(pr1,'fIzq'), hex(FL_IZQ));    gl.uniform3fv(U(pr1,'fDer'), hex(FL_DER));
+    gl.uniform1f(U(pr1,'aInt'), AUR_INTENSIDAD*0.018);
+    gl.uniform1f(U(pr1,'aOnd'), AUR_ONDULACION*0.01);
+    gl.uniform1f(U(pr1,'aRay'), AUR_RAYOS*0.01);
+    gl.uniform1f(U(pr1,'aAlt'), AUR_ALTURA*0.01);
+    gl.uniform1f(U(pr1,'aCx'), AUR_CX);
+    gl.uniform1f(U(pr1,'aCy'), 1.0 - AUR_CY);
+    gl.uniform1f(U(pr1,'aSem'), AUR_SEMILLA);
+    gl.uniform1f(U(pr1,'aBal'), 2.5 + (0.4 - 2.5) * (AUR_BALANCE*0.01));
+    gl.uniform1i(U(pr1,'u_campo'), 0);
 
-    function rgb(nombre){
-      var v = getComputedStyle(document.documentElement).getPropertyValue(nombre).trim();
-      var m = /^#([0-9a-f]{6})$/i.exec(v);
-      if (!m) return [0.9,0.92,0.94];
-      var n = parseInt(m[1],16);
-      return [((n>>16)&255)/255, ((n>>8)&255)/255, (n&255)/255];
-    }
-    function pintarColores(){
-      gl.uniform3fv(u1, rgb('--f1'));
-      gl.uniform3fv(u2, rgb('--f2'));
-      gl.uniform3fv(u3, rgb('--f3'));
-      gl.uniform3fv(u4, rgb('--f4'));
-    }
-    pintarColores();
-    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintarColores);
-    new MutationObserver(pintarColores).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
+    // ---- constantes de la pasada 2 ----
+    gl.useProgram(pr2);
+    gl.uniform1f(U(pr2,'cPix'), CRT_PIXEL);   gl.uniform1f(U(pr2,'cDes'), CRT_DESVIO);
+    gl.uniform1f(U(pr2,'cLin'), CRT_LINEAS);  gl.uniform1f(U(pr2,'cFrec'), CRT_FREC);
+    gl.uniform1f(U(pr2,'cBri'), CRT_BRILLO);  gl.uniform1f(U(pr2,'cCon'), CRT_CONTRASTE);
+    gl.uniform1f(U(pr2,'cVin'), CRT_VINETA);  gl.uniform1f(U(pr2,'cVinR'), CRT_VIN_RADIO);
+    gl.uniform1i(U(pr2,'u_tex'), 1);
+
+    // ---- textura del campo de fluido (R=vel.x, G=vel.y, B=tinta) ----
+    var bytes = new Uint8Array(N*N*4);
+    for (var i = 0; i < N*N; i++){ bytes[i*4] = 128; bytes[i*4+1] = 128; bytes[i*4+3] = 255; }
+    var texCampo = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, texCampo);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, N, N, 0, gl.RGBA, gl.UNSIGNED_BYTE, bytes);
+
+    // ---- destino intermedio de la pasada 1 ----
+    var texEscena = gl.createTexture(), fbo = gl.createFramebuffer();
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, texEscena);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
     var ratio = Math.min(window.devicePixelRatio || 1, 1.5) * 0.5;
+    var anchoPx = 0, altoPx = 0;
     function medir(){
-      // la caja del lienzo es mas fiable que innerWidth: hay contextos donde la
-      // ventana informa cero al cargar y el fondo se quedaria de un pixel
       var cw = lienzo.clientWidth || innerWidth || 1;
       var ch = lienzo.clientHeight || innerHeight || 1;
-      var w = Math.max(1, Math.round(cw * ratio)), alto = Math.max(1, Math.round(ch * ratio));
-      if (lienzo.width !== w || lienzo.height !== alto){
-        lienzo.width = w; lienzo.height = alto;
-        gl.viewport(0, 0, w, alto);
+      var w = Math.max(2, Math.round(cw * ratio)), h = Math.max(2, Math.round(ch * ratio));
+      if (lienzo.width !== w || lienzo.height !== h){
+        lienzo.width = w; lienzo.height = h;
+        anchoPx = w; altoPx = h;
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, texEscena);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texEscena, 0);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       }
-      gl.uniform2f(uRes, lienzo.width, lienzo.height);
-      return w > 1 && alto > 1;
+      anchoPx = lienzo.width; altoPx = lienzo.height;
+      return anchoPx > 1 && altoPx > 1;
     }
-    function pintar(){ gl.drawArrays(gl.TRIANGLES, 0, 3); }
+
+    // ---------- simulacion de fluido ----------
+    var vel = new Float32Array(N*N*2), velNueva = new Float32Array(N*N*2);
+    var tinta = new Float32Array(N*N),  tintaNueva = new Float32Array(N*N);
+    var px = 0.5, py = 0.5, ultimaPx = 0.5, ultimaPy = 0.5;
+    var svx = 0, svy = 0, movio = false;
+
+    addEventListener('pointermove', function(e){
+      px = e.clientX / innerWidth;
+      py = 1 - e.clientY / innerHeight;
+      movio = true;
+    }, { passive:true });
+
+    function simular(dt){
+      var ar = anchoPx / Math.max(altoPx, 1);
+      var cvx = dt > 0 ? (px - ultimaPx) / dt : 0;
+      var cvy = dt > 0 ? (py - ultimaPy) / dt : 0;
+      svx = 0.85 * svx + 0.15 * cvx;
+      svy = 0.85 * svy + 0.15 * cvy;
+
+      var decae = 1 - dt;
+      var paso = 50 * FL_INERCIA * dt;
+      var x, y, k, k2;
+
+      // la velocidad solo se apaga; la tinta ademas se arrastra siguiendola
+      for (k = 0; k < N*N*2; k++) velNueva[k] = vel[k] * decae;
+
+      for (y = 0; y < N; y++){
+        for (x = 0; x < N; x++){
+          k = y*N + x; k2 = k*2;
+          tintaNueva[k] = tinta[k] * decae;
+          if (Math.abs(vel[k2]) > 0.001 || Math.abs(vel[k2+1]) > 0.001){
+            var sx = x - vel[k2]*paso, sy = y - vel[k2+1]*paso;
+            var x0 = Math.floor(sx), y0 = Math.floor(sy), x1 = x0+1, y1 = y0+1;
+            if (x0 >= 0 && y0 >= 0 && x1 < N && y1 < N){
+              var fx = sx - x0, fy = sy - y0;
+              tintaNueva[k] = (tinta[y0*N+x0]*(1-fx)*(1-fy) + tinta[y0*N+x1]*fx*(1-fy)
+                             + tinta[y1*N+x0]*(1-fx)*fy    + tinta[y1*N+x1]*fx*fy) * decae;
+            }
+          }
+        }
+      }
+
+      // inyeccion en el cursor, solo mientras se mueve de verdad
+      var f = Math.sqrt(svx*svx + svy*svy);
+      var radio = 0.05 * FL_RADIO * Math.min(f*f*20, 1);
+      if (radio > 1e-5 && (Math.abs(cvx) + Math.abs(cvy)) > 0.01){
+        var empuje = 100 * FL_INTENSIDAD * dt * 0.01;
+        var tono = Math.min(10*f, 1);
+        for (y = 0; y < N; y++){
+          for (x = 0; x < N; x++){
+            var u = (x+0.5)/N, v = (y+0.5)/N;
+            var dx = ar >= 1 ? (u - px)*ar : u - px;
+            var dy = ar >= 1 ? v - py : (v - py)/ar;
+            var d = Math.sqrt(dx*dx + dy*dy);
+            if (d < 2*radio){
+              k = y*N + x; k2 = k*2;
+              var e = Math.exp(-d*d/(radio*radio));
+              velNueva[k2]   += svx * e * empuje;
+              velNueva[k2+1] += svy * e * empuje;
+              tintaNueva[k]  += e * empuje * tono;
+            }
+          }
+        }
+      }
+
+      for (k = 0; k < N*N; k++){
+        k2 = k*2;
+        var a = velNueva[k2], b = velNueva[k2+1], t = tintaNueva[k];
+        a = a < -1 ? -1 : (a > 1 ? 1 : a);
+        b = b < -1 ? -1 : (b > 1 ? 1 : b);
+        t = t < 0 ? 0 : (t > 1 ? 1 : t);
+        vel[k2] = a; vel[k2+1] = b; tinta[k] = t;
+        bytes[k*4]   = (a*0.5 + 0.5) * 255;
+        bytes[k*4+1] = (b*0.5 + 0.5) * 255;
+        bytes[k*4+2] = t * 255;
+      }
+
+      ultimaPx = px; ultimaPy = py;
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, texCampo);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, N, N, 0, gl.RGBA, gl.UNSIGNED_BYTE, bytes);
+    }
+
+    // ---------- dibujo ----------
+    var reloj = 0;
+    function pintar(){
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, texCampo);
+      gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texEscena);
+
+      gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+      gl.viewport(0, 0, anchoPx, altoPx);
+      gl.useProgram(pr1);
+      gl.uniform2f(U(pr1,'u_res'), anchoPx, altoPx);
+      gl.uniform1f(U(pr1,'u_t'), reloj);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.viewport(0, 0, anchoPx, altoPx);
+      gl.useProgram(pr2);
+      gl.uniform2f(U(pr2,'u_res'), anchoPx, altoPx);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+
     addEventListener('resize', function(){ if (medir()) pintar(); });
     if ('ResizeObserver' in window) new ResizeObserver(function(){ if (medir()) pintar(); }).observe(lienzo);
     medir();
 
-    // El raton arrastra el fluido. Se guarda la velocidad, no solo la posicion: es
-    // lo que hace que la estela salga hacia donde va el gesto y siga corriendo medio
-    // segundo despues de parar, en vez de quedarse en un circulo simetrico.
-    var mx = 0.5, my = 0.5, dx = 0.5, dy = 0.5, vx = 0, vy = 0, amp = 0.35;
-    addEventListener('pointermove', function(e){
-      var nx = e.clientX / innerWidth, ny = 1 - e.clientY / innerHeight;
-      vx = Math.max(-1.4, Math.min(1.4, vx + (nx - mx) * 3.2));
-      vy = Math.max(-1.4, Math.min(1.4, vy + (ny - my) * 3.2));
-      mx = nx; my = ny; amp = 1;
-    }, { passive:true });
-
     var quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var t0 = performance.now(), ultimo = 0;
+    var anterior = 0;
 
     function cuadro(ahora){
       requestAnimationFrame(cuadro);
       if (document.hidden) return;
-      if (ahora - ultimo < 33) return;          // ~30 por segundo, de sobra para esto
-      ultimo = ahora;
-      dx += (mx - dx) * 0.10; dy += (my - dy) * 0.10;
-      vx *= 0.95; vy *= 0.95;              // inercia: la estela tarda en apagarse
-      amp = 0.35 + (amp - 0.35) * 0.97;    // no baja del todo: el halo sigue ahi
-      gl.uniform1f(uT, (ahora - t0) / 1000);
-      gl.uniform2f(uM, dx, dy);
-      gl.uniform2f(uV, vx, vy);
-      gl.uniform1f(uAmp, amp);
+      if (ahora - anterior < 33) return;          // ~30 por segundo, de sobra
+      var dt = Math.min((ahora - anterior)/1000, 0.016);
+      anterior = ahora;
+      reloj += dt * AUR_VELOCIDAD;
+      simular(dt);
       pintar();
     }
 
-    // siempre se pinta un cuadro de entrada; si la animacion no arranca por lo que
-    // sea, se ve el fondo quieto y no un rectangulo vacio
-    gl.uniform1f(uT, 12.0); gl.uniform2f(uM, 0.5, 0.62);
-    gl.uniform2f(uV, 0.0, 0.0); gl.uniform1f(uAmp, 0.35);
-    pintar();
-    if (!quieto) requestAnimationFrame(cuadro);
+    // siempre entra un cuadro, aunque la animacion no arranque
+    reloj = -6;
+    medir(); pintar();
+    if (!quieto) requestAnimationFrame(function(t){ anterior = t; cuadro(t); });
   })();
 
     document.addEventListener('keydown', function(e){
