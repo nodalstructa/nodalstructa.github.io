@@ -83,6 +83,27 @@
     --shadow:     0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
   }
 
+  /* El fondo fluido es gris claro siempre, no cambia con el tema del sistema.
+     Sin esto, quien tenga el ordenador en modo oscuro recibiria la pagina con
+     texto claro sobre fondo claro y no se leeria nada. Los recuadros y los
+     colores son los mismos de siempre: esto solo impide que se vuelvan oscuros.
+     Para dejar que la pagina siga al sistema otra vez, borra este bloque. */
+  :root{
+    --ink:        #101720;
+    --ink-soft:   #47535f;
+    --ink-faint:  #7b8794;
+    --ground:     #e9ecf0;
+    --surface:    #ffffff;
+    --surface-2:  #f3f5f8;
+    --accent:     #0b6e9e;
+    --accent-2:   #084f73;
+    --rust:       #b8601c;
+    --gh:         #4a7a28;
+    --rule:       #c3c9d2;
+    --rule-soft:  #dde1e7;
+    --shadow:     0 1px 2px rgba(16,23,32,.06), 0 8px 24px -12px rgba(16,23,32,.18);
+  }
+
   /* ---------- type ---------- */
   :root{
     --display: "Bahnschrift","DIN Alternate","Archivo Narrow","Roboto Condensed","Helvetica Neue",system-ui,sans-serif;
@@ -1529,17 +1550,24 @@
           || lienzo.getContext('experimental-webgl');
     if (!gl) return;
 
-    // ---- ajustes (los mismos valores que trae la pagina de Netlify) ----
-    var GRAD_A = '#1bc5c3', GRAD_B = '#371e71';
-    var AUR_A = '#04a29f', AUR_B = '#32e6e2', AUR_C = '#0ff0e1';
+    // ---- ajustes ----
+    // El movimiento es el mismo que en la pagina de Netlify: los numeros de la
+    // aurora y del flujo no se han tocado. Lo unico distinto son los colores,
+    // pasados a gris claro, y por eso la aurora y el CRT se mezclan de otra
+    // manera (ver los comentarios de cada uno mas abajo).
+    var GRAD_A = '#f8fafc', GRAD_B = '#e7ebf1';   // degradado de izquierda a derecha
+    var AUR_A = '#e3e9f0', AUR_B = '#d7dee8', AUR_C = '#ccd6e3';
     var AUR_INTENSIDAD = 74, AUR_CORTINAS = 2, AUR_VELOCIDAD = -10,
         AUR_ONDULACION = 139, AUR_RAYOS = 7, AUR_ALTURA = 120,
         AUR_CX = 0.5, AUR_CY = 0.0, AUR_SEMILLA = 81, AUR_BALANCE = 17;
-    var FL_BASE = '#02807d', FL_ARRIBA = '#04a29f', FL_ABAJO = '#0cb9e4',
-        FL_IZQ = '#4ac4c2', FL_DER = '#1f36e5';
+    var FL_BASE = '#dbe2ea', FL_ARRIBA = '#d0dae7', FL_ABAJO = '#c5d3e5',
+        FL_IZQ = '#d8dfe8', FL_DER = '#b7c5dd';
     var FL_INTENSIDAD = 0.7, FL_RADIO = 1.4, FL_INERCIA = 27;
-    var CRT_PIXEL = 108, CRT_DESVIO = 5.2, CRT_LINEAS = 0.2, CRT_FREC = 620,
-        CRT_BRILLO = 1.1, CRT_CONTRASTE = 1.0, CRT_VINETA = 1.0, CRT_VIN_RADIO = 0.7;
+    // CRT_MASCARA es cuanto tiñe la mascara de fosforos cada canal. Sobre color
+    // saturado el 0.1 del original no se nota; sobre gris se veria verdoso.
+    var CRT_PIXEL = 108, CRT_DESVIO = 5.2, CRT_LINEAS = 0.12, CRT_FREC = 620,
+        CRT_BRILLO = 1.0, CRT_CONTRASTE = 1.0, CRT_VINETA = 0.18, CRT_VIN_RADIO = 0.7,
+        CRT_MASCARA = 0.05;
 
     var N = 128;   // lado de la rejilla del fluido
 
@@ -1598,9 +1626,12 @@
       ' vec2 k1=cortina(uv,ar,1.0,3.1);',
       ' float p1=k1.y*0.65; alt+=k1.x*p1; fuerza+=p1;',
       ' float g=pow(alt/(fuerza+0.001),aBal);',
-      ' vec3 aur=clamp(mix(mix(aA,aB,smoothstep(0.0,0.2,g)),aC,smoothstep(0.4,0.85,g))*fuerza*aInt,0.0,1.0);',
+      // Sobre fondo claro la mezcla "screen" del original solo blanquearia y la
+      // aurora desapareceria, asi que la cortina se pinta encima con su propio
+      // color y "fuerza" decide cuanto tapa. Las formas son las mismas.
+      ' vec3 aur=mix(mix(aA,aB,smoothstep(0.0,0.2,g)),aC,smoothstep(0.4,0.85,g));',
       ' float aAlfa=clamp(fuerza*aInt*0.5,0.0,1.0);',
-      ' col=mix(col,col+aur-col*aur,aAlfa);',
+      ' col=mix(col,aur,aAlfa);',
       // 3. flujo del raton: media de 5 muestras del campo, como hace el original
       ' vec2 d=vec2(1.0/128.0);',
       ' vec4 c0=texture2D(u_campo,uv);',
@@ -1630,12 +1661,9 @@
     var FS2 = [
       'precision mediump float;',
       'uniform vec2 u_res; uniform sampler2D u_tex;',
-      'uniform float cPix,cDes,cLin,cFrec,cBri,cCon,cVin,cVinR;',
-      'vec3 sobre(vec3 b,vec3 s){',
-      ' return mix(2.0*b*s,1.0-2.0*(1.0-b)*(1.0-s),step(0.5,b));}',
+      'uniform float cPix,cDes,cLin,cFrec,cBri,cCon,cVin,cVinR,cMasc;',
       'void main(){',
       ' vec2 uv=gl_FragCoord.xy/u_res;',
-      ' vec3 base=texture2D(u_tex,uv).rgb;',
       // aberracion cromatica: cada canal se lee con un desplazamiento distinto
       ' float h=cDes*0.002;',
       ' vec3 c=vec3(texture2D(u_tex,uv+vec2(h,0.0)).r,',
@@ -1650,7 +1678,7 @@
       ' c*=1.0-cLin*s;',
       // mascara de fosforos: las rayas verticales finas
       ' float f=fract(uv.x*cPix*0.5)*6.2831853;',
-      ' c*=vec3(sin(f)*0.1+0.95,sin(f+2.09)*0.1+0.95,sin(f+4.18)*0.1+0.95);',
+      ' c*=vec3(sin(f)*cMasc+1.0,sin(f+2.09)*cMasc+1.0,sin(f+4.18)*cMasc+1.0);',
       // viñeta
       ' float ar=u_res.x/max(u_res.y,1.0);',
       ' vec2 q=uv-0.5;',
@@ -1658,7 +1686,11 @@
       ' float i0=1.0-cVinR*0.9;',
       ' float v=1.0-smoothstep(i0,i0+0.5,r);',
       ' c*=mix(1.0,v,cVin);',
-      ' gl_FragColor=vec4(clamp(sobre(base,clamp(c,0.0,1.0)),0.0,1.0),1.0);}'
+      // El original mezcla el CRT en modo "overlay". Sobre gris claro eso lava la
+      // imagen hasta dejarla casi blanca, asi que aqui se usa el CRT tal cual:
+      // la aberracion, la mascara de fosforos, el barrido y la viñeta se ven
+      // igual, pero sin quemar el fondo.
+      ' gl_FragColor=vec4(clamp(c,0.0,1.0),1.0);}'
     ].join('\n');
 
     function compilar(tipo, src){
@@ -1709,6 +1741,7 @@
     gl.uniform1f(U(pr2,'cLin'), CRT_LINEAS);  gl.uniform1f(U(pr2,'cFrec'), CRT_FREC);
     gl.uniform1f(U(pr2,'cBri'), CRT_BRILLO);  gl.uniform1f(U(pr2,'cCon'), CRT_CONTRASTE);
     gl.uniform1f(U(pr2,'cVin'), CRT_VINETA);  gl.uniform1f(U(pr2,'cVinR'), CRT_VIN_RADIO);
+    gl.uniform1f(U(pr2,'cMasc'), CRT_MASCARA);
     gl.uniform1i(U(pr2,'u_tex'), 1);
 
     // ---- textura del campo de fluido (R=vel.x, G=vel.y, B=tinta) ----
