@@ -542,6 +542,9 @@
     font-family:var(--display);font-stretch:87.5%;font-weight:600;font-size:17px;
     padding:12px 26px;text-decoration:none;border:1px solid transparent;
     cursor:pointer;
+    /* fijada porque un <button> y un <a> heredan alturas de linea distintas
+       y quedarian a distinto alto en la misma fila */
+    line-height:1.2;
   }
   .btn:hover{background:var(--ink);}
   .btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
@@ -1341,7 +1344,10 @@
         <button type="button" class="btn copy" data-copy="nodalstructa@gmail.com">
           <span class="es">Copiar correo</span><span class="en">Copy email</span>
         </button>
-        <span class="ctamail">nodalstructa@gmail.com</span>
+        <a class="btn ghost" href="https://api.whatsapp.com/send?phone=34665850897" target="_blank" rel="noopener">
+          <span class="es">Escribir por WhatsApp</span><span class="en">Message on WhatsApp</span>
+        </a>
+        <span class="ctamail">nodalstructa@gmail.com · +34 665 850 897</span>
       </div>
     </div>
 
