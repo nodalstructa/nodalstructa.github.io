@@ -50,6 +50,9 @@
     --rule-soft:  #dde1e7;
     --shadow:     0 1px 2px rgba(16,23,32,.06), 0 8px 24px -12px rgba(16,23,32,.18);
     --grid:       rgba(16,23,32,.045);
+    --f1:         #e9ecf0;   /* fondo fluido: base */
+    --f2:         #dbe6ee;   /* fondo fluido: medio */
+    --f3:         #c7d8e6;   /* fondo fluido: crestas */
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
@@ -67,6 +70,9 @@
       --rule-soft:  #222c37;
       --shadow:     0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
       --grid:       rgba(227,233,240,.05);
+      --f1:         #0c1219;
+      --f2:         #101d29;
+      --f3:         #17293b;
     }
   }
   :root[data-theme="dark"]{
@@ -84,6 +90,9 @@
     --rule-soft:  #222c37;
     --shadow:     0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
     --grid:       rgba(227,233,240,.05);
+    --f1:         #0c1219;
+    --f2:         #101d29;
+    --f3:         #17293b;
   }
 
   /* ---------- type ---------- */
@@ -98,15 +107,27 @@
   body{
     margin:0;
     background:var(--ground);
-    background-image:
-      linear-gradient(var(--grid) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-    background-size:32px 32px;
     color:var(--ink);
     font-family:var(--body);
     font-size:16px;
     line-height:1.6;
   }
+  /* El lienzo pinta el fondo y la retícula se superpone, así el papel de plano
+     sigue estando pero sobre algo que se mueve. Si WebGL falla, queda el color
+     plano de --ground y la retícula: la página no depende de esto. */
+  #fondo{
+    position:fixed;inset:0;z-index:0;display:block;
+    width:100%;height:100%;pointer-events:none;
+    background:var(--ground);
+  }
+  body::before{
+    content:"";position:fixed;inset:0;z-index:1;pointer-events:none;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size:32px 32px;
+  }
+  .wrap,.secnav{position:relative;z-index:2;}
 
   /* ---------- language switching ---------- */
   .en{display:none;}
@@ -649,6 +670,8 @@
   @keyframes rise{to{opacity:1;transform:none;}}
   @media (prefers-reduced-motion:reduce){.fade{animation:none;opacity:1;transform:none;}}
 </style>
+
+<canvas id="fondo" aria-hidden="true"></canvas>
 
 <div class="wrap">
 
@@ -1501,6 +1524,130 @@
     } else {
       bucles.forEach(arrancar);
     }
+
+
+  /* ---------- fondo fluido ----------
+     Ruido con deformacion de dominio, mas una onda que nace donde esta el cursor.
+     Se dibuja a media resolucion (el ruido es de baja frecuencia, no se nota) y se
+     detiene cuando la pestana no esta visible. Si el navegador no da WebGL, no pasa
+     nada: queda el color plano y la reticula. */
+  (function(){
+    var lienzo = document.getElementById('fondo');
+    if (!lienzo) return;
+    var gl = lienzo.getContext('webgl', { antialias:false, depth:false, alpha:false })
+          || lienzo.getContext('experimental-webgl');
+    if (!gl) return;
+
+    var VS = 'attribute vec2 pos;void main(){gl_Position=vec4(pos,0.0,1.0);}';
+    var FS = [
+      'precision mediump float;',
+      'uniform vec2 u_res; uniform float u_t; uniform vec2 u_m; uniform float u_amp;',
+      'uniform vec3 c1; uniform vec3 c2; uniform vec3 c3;',
+      'float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}',
+      'float ruido(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.0-2.0*f);',
+      ' return mix(mix(hash(i),hash(i+vec2(1.0,0.0)),u.x),mix(hash(i+vec2(0.0,1.0)),hash(i+vec2(1.0,1.0)),u.x),u.y);}',
+      'float fbm(vec2 p){float v=0.0,a=0.5;for(int i=0;i<5;i++){v+=a*ruido(p);p*=2.02;a*=0.5;}return v;}',
+      'void main(){',
+      ' float ar=u_res.x/u_res.y;',
+      ' vec2 uv=gl_FragCoord.xy/u_res;',
+      ' vec2 p=vec2(uv.x*ar,uv.y)*1.7;',
+      ' vec2 m=vec2(u_m.x*ar,u_m.y)*1.7;',
+      ' float d=distance(p,m);',
+      ' float onda=sin(d*14.0-u_t*2.0)*exp(-d*2.6)*u_amp;',
+      ' vec2 q=vec2(fbm(p+u_t*0.045),fbm(p+vec2(5.2,1.3)-u_t*0.035));',
+      ' vec2 r=vec2(fbm(p+2.4*q+vec2(1.7,9.2)+u_t*0.028),fbm(p+2.4*q+vec2(8.3,2.8)-u_t*0.021));',
+      ' float f=fbm(p+2.4*r+onda*0.6);',
+      ' vec3 col=mix(c1,c2,clamp(f*1.5,0.0,1.0));',
+      ' col=mix(col,c3,clamp(length(r)*0.55+onda*0.9,0.0,1.0));',
+      ' gl_FragColor=vec4(col,1.0);}'
+    ].join('\n');
+
+    function compilar(tipo, src){
+      var s = gl.createShader(tipo); gl.shaderSource(s, src); gl.compileShader(s);
+      return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null;
+    }
+    var vs = compilar(gl.VERTEX_SHADER, VS), fs = compilar(gl.FRAGMENT_SHADER, FS);
+    if (!vs || !fs) return;
+    var prog = gl.createProgram();
+    gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
+    gl.useProgram(prog);
+
+    var buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,3,-1,-1,3]), gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(prog, 'pos');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+    var uRes = gl.getUniformLocation(prog,'u_res'), uT = gl.getUniformLocation(prog,'u_t'),
+        uM = gl.getUniformLocation(prog,'u_m'), uAmp = gl.getUniformLocation(prog,'u_amp'),
+        u1 = gl.getUniformLocation(prog,'c1'), u2 = gl.getUniformLocation(prog,'c2'),
+        u3 = gl.getUniformLocation(prog,'c3');
+
+    function rgb(nombre){
+      var v = getComputedStyle(document.documentElement).getPropertyValue(nombre).trim();
+      var m = /^#([0-9a-f]{6})$/i.exec(v);
+      if (!m) return [0.9,0.92,0.94];
+      var n = parseInt(m[1],16);
+      return [((n>>16)&255)/255, ((n>>8)&255)/255, (n&255)/255];
+    }
+    function pintarColores(){
+      gl.uniform3fv(u1, rgb('--f1'));
+      gl.uniform3fv(u2, rgb('--f2'));
+      gl.uniform3fv(u3, rgb('--f3'));
+    }
+    pintarColores();
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', pintarColores);
+    new MutationObserver(pintarColores).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
+
+    var ratio = Math.min(window.devicePixelRatio || 1, 1.5) * 0.5;
+    function medir(){
+      // la caja del lienzo es mas fiable que innerWidth: hay contextos donde la
+      // ventana informa cero al cargar y el fondo se quedaria de un pixel
+      var cw = lienzo.clientWidth || innerWidth || 1;
+      var ch = lienzo.clientHeight || innerHeight || 1;
+      var w = Math.max(1, Math.round(cw * ratio)), alto = Math.max(1, Math.round(ch * ratio));
+      if (lienzo.width !== w || lienzo.height !== alto){
+        lienzo.width = w; lienzo.height = alto;
+        gl.viewport(0, 0, w, alto);
+      }
+      gl.uniform2f(uRes, lienzo.width, lienzo.height);
+      return w > 1 && alto > 1;
+    }
+    function pintar(){ gl.drawArrays(gl.TRIANGLES, 0, 3); }
+    addEventListener('resize', function(){ if (medir()) pintar(); });
+    if ('ResizeObserver' in window) new ResizeObserver(function(){ if (medir()) pintar(); }).observe(lienzo);
+    medir();
+
+    // el raton empuja la onda; la amplitud decae al parar
+    var mx = 0.5, my = 0.5, dx = 0.5, dy = 0.5, amp = 0;
+    addEventListener('pointermove', function(e){
+      mx = e.clientX / innerWidth; my = 1 - e.clientY / innerHeight; amp = 1;
+    }, { passive:true });
+
+    var quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var t0 = performance.now(), ultimo = 0;
+
+    function cuadro(ahora){
+      requestAnimationFrame(cuadro);
+      if (document.hidden) return;
+      if (ahora - ultimo < 33) return;          // ~30 por segundo, de sobra para esto
+      ultimo = ahora;
+      dx += (mx - dx) * 0.06; dy += (my - dy) * 0.06;
+      amp *= 0.96;
+      gl.uniform1f(uT, (ahora - t0) / 1000);
+      gl.uniform2f(uM, dx, dy);
+      gl.uniform1f(uAmp, amp * 0.9);
+      pintar();
+    }
+
+    // siempre se pinta un cuadro de entrada; si la animacion no arranca por lo que
+    // sea, se ve el fondo quieto y no un rectangulo vacio
+    gl.uniform1f(uT, 12.0); gl.uniform2f(uM, 0.5, 0.5); gl.uniform1f(uAmp, 0.0);
+    pintar();
+    if (!quieto) requestAnimationFrame(cuadro);
+  })();
 
     document.addEventListener('keydown', function(e){
       var abierta = lb.classList.contains('open');
