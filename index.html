@@ -585,6 +585,8 @@
     display:grid;grid-template-columns:minmax(0,1fr) auto;
     gap:24px 40px;align-items:center;margin-bottom:28px;
   }
+  /* los subapartados dentro de una seccion abren con su propia regla */
+  .subhead + .procintro,.subhead + .caps{margin-top:0;}
   .procintro .secsub{margin-bottom:0;}
   .cifras{display:flex;gap:34px;flex-wrap:wrap;}
   .cifras > div{display:flex;flex-direction:column;gap:2px;}
@@ -1197,58 +1199,44 @@
     </div>
     <div class="caps">
       <figure class="muestra">
-        <img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAQABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDAySuKZTh3pMUAJRRRQB//2Q==) center/cover no-repeat" src="assets/ej_api.webp" data-full="assets/ej_api-full.webp" alt="Código C# de una herramienta para Tekla Structures: importa Tekla.Structures.Model, comprueba la conexión con el modelo y usa el Picker para que el usuario seleccione las piezas">
+        <img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAQABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDAySuKZTh3pMUAJRRRQB//2Q==) center/cover no-repeat" src="assets/ej_api.webp" data-full="assets/ej_api-full.webp" alt="Código C# de una herramienta para Tekla Structures, con el Picker para seleccionar piezas del modelo">
       </figure>
       <div>
         <h4><span class="es">Componentes paramétricos</span><span class="en">Parametric components</span></h4>
-        <p><span class="es">Plugins de sistema que aparecen en el catálogo como cualquier componente nativo, con
-        diálogo propio, atributos guardables, iconos y recálculo al modificar la geometría.</span>
-        <span class="en">System plugins that appear in the catalogue like any native component, with their own
-        dialog, saveable attribute sets, icons and recalculation when geometry changes.</span></p>
+        <p><span class="es">Plugins de sistema con diálogo propio, atributos guardables y recálculo al modificar la geometría.</span>
+        <span class="en">System plugins with their own dialog, saveable attributes and recalculation when geometry changes.</span></p>
       </div>
       <div>
         <h4><span class="es">Geometría y sólidos</span><span class="en">Geometry and solids</span></h4>
-        <p><span class="es">Cálculo sobre la geometría real de las piezas: intersecciones, detección de cortes y
-        huecos, orientación automática según la dirección de la pieza, planos de trabajo.</span>
-        <span class="en">Work on the real solid geometry of parts: intersections, cut and opening detection,
-        automatic orientation from part direction, work planes.</span></p>
+        <p><span class="es">Cálculo sobre la geometría real: intersecciones, detección de cortes y huecos, orientación automática.</span>
+        <span class="en">Work on the real solid geometry: intersections, cut and opening detection, automatic orientation.</span></p>
       </div>
       <div>
         <h4><span class="es">Herramientas de productividad</span><span class="en">Productivity tools</span></h4>
-        <p><span class="es">Utilidades que operan sobre la selección del modelador, con ventanas que conviven con
-        Tekla sin bloquearlo y ajustes que se recuerdan entre sesiones.</span>
-        <span class="en">Utilities that act on the modeller's selection, with windows that coexist with Tekla
-        without blocking it, and settings remembered between sessions.</span></p>
+        <p><span class="es">Utilidades sobre la selección del modelador, sin bloquear Tekla y con los ajustes recordados.</span>
+        <span class="en">Utilities that act on the modeller's selection, without blocking Tekla and remembering their settings.</span></p>
       </div>
       <div>
         <h4><span class="es">Diseño paramétrico en Grasshopper</span><span class="en">Parametric design in Grasshopper</span></h4>
-        <p><span class="es">Geometría que no encaja en un componente de Tekla: superficies regladas, mallas,
-        repartos que dependen de una curva. Se define en Grasshopper y se baja al modelo como piezas reales.</span>
-        <span class="en">Geometry that will not fit a Tekla component: ruled surfaces, meshes, layouts driven
-        by a curve. Defined in Grasshopper and brought down into the model as real parts.</span></p>
+        <p><span class="es">Geometría que no encaja en un componente: superficies regladas, mallas, repartos sobre curva.</span>
+        <span class="en">Geometry that will not fit a component: ruled surfaces, meshes, layouts driven by a curve.</span></p>
       </div>
       <div>
         <h4><span class="es">Despliegue en toda la oficina</span><span class="en">Office-wide deployment</span></h4>
-        <p><span class="es">Instaladores TSEP y scripts de instalación para llevar la herramienta a todos los
-        puestos y a varias versiones de Tekla, no solo a la máquina de quien la pidió.</span>
-        <span class="en">TSEP installers and install scripts to roll a tool out to every workstation and across
-        several Tekla versions, not just the machine of whoever asked for it.</span></p>
+        <p><span class="es">Instaladores TSEP para todos los puestos y varias versiones de Tekla.</span>
+        <span class="en">TSEP installers for every workstation and across several Tekla versions.</span></p>
       </div>
       <div>
         <h4><span class="es">Control de calidad</span><span class="en">Quality control</span></h4>
-        <p><span class="es">Comprobaciones automáticas sobre el modelo y los planos para detectar antes de
-        fabricación lo que hoy se detecta en el taller.</span>
-        <span class="en">Automated checks over the model and drawings, catching before fabrication what today
-        gets caught in the shop.</span></p>
+        <p><span class="es">Comprobaciones automáticas sobre modelo y planos: detectar antes de fabricar lo que hoy aparece en el taller.</span>
+        <span class="en">Automated checks over model and drawings: catching before fabrication what today shows up in the shop.</span></p>
       </div>
     </div>
 
     <h3 class="subhead" id="paraquien"><span class="es">¿Para quién?</span><span class="en">Who it is for</span></h3>
     <p class="secsub">
-      <span class="es">Trabajamos con quien vive dentro del modelo: oficinas que detallan a diario y empresas que
-      fabrican lo que sale de ese modelo.</span>
-      <span class="en">We work with the people who live inside the model: offices that detail every day and
-      companies that fabricate what comes out of that model.</span>
+      <span class="es">Oficinas que detallan a diario y empresas que fabrican lo que sale del modelo.</span>
+      <span class="en">Offices that detail every day, and companies that fabricate what comes out of the model.</span>
     </p>
     <div class="caps">
       <div>
@@ -1275,14 +1263,8 @@
         <span class="en">Automation of process structures, platforms, stairs, railings and connections.</span></p>
       </div>
     </div>
-  </section>
 
-
-  <section id="proceso">
-    <div class="sechead">
-      <span class="num">06</span>
-      <h2><span class="es">Cómo trabajamos</span><span class="en">How we work</span></h2>
-    </div>
+    <h3 class="subhead" id="proceso"><span class="es">Cómo trabajamos</span><span class="en">How we work</span></h3>
     <div class="procintro">
       <p class="secsub">
         <span class="es">De la tarea manual a una herramienta instalada en todos los puestos. El presupuesto se
@@ -1345,6 +1327,8 @@
       </div>
     </div>
   </section>
+
+
 
   <section id="contacto">
     <div class="cta">
