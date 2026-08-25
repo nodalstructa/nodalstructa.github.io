@@ -112,20 +112,12 @@
     font-size:16px;
     line-height:1.6;
   }
-  /* El lienzo pinta el fondo y la retícula se superpone, así el papel de plano
-     sigue estando pero sobre algo que se mueve. Si WebGL falla, queda el color
-     plano de --ground y la retícula: la página no depende de esto. */
+  /* El lienzo pinta el fondo entero. Si WebGL falla no pasa nada: queda el
+     color plano de --ground y la pagina se lee igual. */
   #fondo{
     position:fixed;inset:0;z-index:0;display:block;
     width:100%;height:100%;pointer-events:none;
     background:var(--ground);
-  }
-  body::before{
-    content:"";position:fixed;inset:0;z-index:1;pointer-events:none;
-    background-image:
-      linear-gradient(var(--grid) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-    background-size:32px 32px;
   }
   .wrap,.secnav{position:relative;z-index:2;}
 
@@ -1553,9 +1545,9 @@
       ' vec2 p=vec2(uv.x*ar,uv.y)*1.7;',
       ' vec2 m=vec2(u_m.x*ar,u_m.y)*1.7;',
       ' float d=distance(p,m);',
-      ' float onda=sin(d*14.0-u_t*2.0)*exp(-d*2.6)*u_amp;',
-      ' vec2 q=vec2(fbm(p+u_t*0.045),fbm(p+vec2(5.2,1.3)-u_t*0.035));',
-      ' vec2 r=vec2(fbm(p+2.4*q+vec2(1.7,9.2)+u_t*0.028),fbm(p+2.4*q+vec2(8.3,2.8)-u_t*0.021));',
+      ' float onda=sin(d*30.0-u_t*4.5)*exp(-d*7.0)*u_amp;',
+      ' vec2 q=vec2(fbm(p+u_t*0.16),fbm(p+vec2(5.2,1.3)-u_t*0.13));',
+      ' vec2 r=vec2(fbm(p+2.4*q+vec2(1.7,9.2)+u_t*0.10),fbm(p+2.4*q+vec2(8.3,2.8)-u_t*0.075));',
       ' float f=fbm(p+2.4*r+onda*0.6);',
       ' vec3 col=mix(c1,c2,clamp(f*1.5,0.0,1.0));',
       ' col=mix(col,c3,clamp(length(r)*0.55+onda*0.9,0.0,1.0));',
