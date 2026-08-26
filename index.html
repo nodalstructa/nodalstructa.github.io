@@ -1563,9 +1563,13 @@
     var AUR_INTENSIDAD = 74, AUR_CORTINAS = 2, AUR_VELOCIDAD = -10,
         AUR_ONDULACION = 139, AUR_RAYOS = 7, AUR_ALTURA = 120,
         AUR_CX = 0.5, AUR_CY = 0.0, AUR_SEMILLA = 81, AUR_BALANCE = 17;
-    var FL_BASE = '#ccd6e2', FL_ARRIBA = '#b6c8de', FL_ABAJO = '#a3bcdb',
-        FL_IZQ = '#c2cfdf', FL_DER = '#8fa8d0';
-    var FL_INTENSIDAD = 1.1, FL_RADIO = 1.4, FL_INERCIA = 27;
+    // Donde la tinta se acumula, la cobertura llega a 1 y el pixel toma
+    // literalmente estos colores. Por eso no pueden ser oscuros: el contraste hay
+    // que sacarlo de aqui y no de subir la intensidad ni de bajar el umbral, que
+    // es lo que engordaba el circulo.
+    var FL_BASE = '#b9c4d4', FL_ARRIBA = '#a8bad0', FL_ABAJO = '#98adcb',
+        FL_IZQ = '#c0cad8', FL_DER = '#8aa2c8';
+    var FL_INTENSIDAD = 0.7, FL_RADIO = 1.4, FL_INERCIA = 27;
     // Acabado de monitor CRT, apagado. CRT_MASCARA era la mascara de fosforos:
     // sobre color saturado no se nota, pero sobre gris liso salian rayas
     // verticales verdes y rosas muy visibles. CRT_DESVIO es la aberracion
@@ -1655,9 +1659,7 @@
       ' vec4 c4=texture2D(u_campo,uv-vec2(0.0,d.y));',
       ' float tinta=(c0.b+c1.b+c2.b+c3.b+c4.b)*0.2;',
       ' vec2 vel=((c0.rg+c1.rg+c2.rg+c3.rg+c4.rg)*0.2-0.5)*2.0;',
-      // Tras promediar las 5 muestras la tinta se queda en torno a 0.03, asi que
-      // con el umbral de 0.1 del original la estela apenas asomaba sobre el gris.
-      ' float alfa=smoothstep(0.0,0.04,tinta);',
+      ' float alfa=smoothstep(0.0,0.1,tinta);',
       ' float mag=length(vel);',
       ' float G=smoothstep(0.01,0.1,mag);',
       ' vec2 dir=vel/(mag+0.001);',
