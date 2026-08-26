@@ -1570,6 +1570,10 @@
     var FL_BASE = '#b9c4d4', FL_ARRIBA = '#a8bad0', FL_ABAJO = '#98adcb',
         FL_IZQ = '#c0cad8', FL_DER = '#8aa2c8';
     var FL_INTENSIDAD = 0.7, FL_RADIO = 1.4, FL_INERCIA = 27;
+    // Segundos que tarda la estela en apagarse. El original usa 1; aqui se alarga
+    // porque sobre gris claro la estela es mas tenue y se percibe como que se va
+    // antes. No toca la forma ni el tamaño, solo cuanto dura.
+    var FL_VIDA = 2.2;
     // Acabado de monitor CRT, apagado. CRT_MASCARA era la mascara de fosforos:
     // sobre color saturado no se nota, pero sobre gris liso salian rayas
     // verticales verdes y rosas muy visibles. CRT_DESVIO es la aberracion
@@ -1830,7 +1834,7 @@
       svx = 0.85 * svx + 0.15 * cvx;
       svy = 0.85 * svy + 0.15 * cvy;
 
-      var decae = 1 - dt;
+      var decae = 1 - dt/FL_VIDA;
       var paso = 50 * FL_INERCIA * dt;
       var x, y, k, k2;
 
