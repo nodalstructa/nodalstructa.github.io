@@ -1538,11 +1538,14 @@
           se apaga poco a poco. El color sale de HACIA DONDE fluye, no de donde
           esta el raton: arriba, abajo, izquierda y derecha tienen su tono.
        4. Acabado de monitor CRT: aberracion cromatica, mascara vertical de
-          fosforos, lineas de barrido y viñeta, mezclado en modo "overlay".
+          fosforos, lineas de barrido y viñeta. Aqui esta apagado entero, porque
+          sobre gris liso sus rayas verticales se veian de colores.
 
-     Se pinta en dos pasadas porque el CRT necesita leer el resultado de las
-     tres capas de debajo. Todo a media resolucion, ~30 cuadros por segundo, y
-     parado cuando la pestaña no se ve. Si no hay WebGL queda el color plano. */
+     Cuando el CRT esta encendido hace falta dibujar en dos pasadas, porque
+     necesita leer el resultado de las tres capas de debajo; apagado, la pasada 1
+     va directa a pantalla. Se dibuja en cada cuadro, a tres cuartos de la
+     resolucion de la pantalla, y parado cuando la pestaña no se ve. Si el
+     navegador no da WebGL queda el color plano y la pagina se lee igual. */
   (function(){
     var lienzo = document.getElementById('fondo');
     if (!lienzo) return;
@@ -1560,9 +1563,9 @@
     var AUR_INTENSIDAD = 74, AUR_CORTINAS = 2, AUR_VELOCIDAD = -10,
         AUR_ONDULACION = 139, AUR_RAYOS = 7, AUR_ALTURA = 120,
         AUR_CX = 0.5, AUR_CY = 0.0, AUR_SEMILLA = 81, AUR_BALANCE = 17;
-    var FL_BASE = '#d2dae4', FL_ARRIBA = '#c3d0e0', FL_ABAJO = '#b5c8de',
-        FL_IZQ = '#cbd5e1', FL_DER = '#a8bcda';
-    var FL_INTENSIDAD = 0.7, FL_RADIO = 1.4, FL_INERCIA = 27;
+    var FL_BASE = '#ccd6e2', FL_ARRIBA = '#b6c8de', FL_ABAJO = '#a3bcdb',
+        FL_IZQ = '#c2cfdf', FL_DER = '#8fa8d0';
+    var FL_INTENSIDAD = 1.1, FL_RADIO = 1.4, FL_INERCIA = 27;
     // Acabado de monitor CRT, apagado. CRT_MASCARA era la mascara de fosforos:
     // sobre color saturado no se nota, pero sobre gris liso salian rayas
     // verticales verdes y rosas muy visibles. CRT_DESVIO es la aberracion
@@ -1778,7 +1781,10 @@
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-    var ratio = Math.min(window.devicePixelRatio || 1, 1.5) * 0.5;
+    // La pagina de Netlify dibuja a la resolucion real de la pantalla. Aqui se
+    // baja un poco para que el movil no sufra, pero media resolucion dejaba la
+    // estela demasiado blanda: se pierde el borde y parece menos viva.
+    var ratio = Math.min(window.devicePixelRatio || 1, 2) * 0.75;
     var anchoPx = 0, altoPx = 0;
     function medir(){
       var cw = lienzo.clientWidth || innerWidth || 1;
@@ -1803,6 +1809,11 @@
     var tinta = new Float32Array(N*N),  tintaNueva = new Float32Array(N*N);
     var px = 0.5, py = 0.5, ultimaPx = 0.5, ultimaPy = 0.5;
     var svx = 0, svy = 0, movio = false;
+    // Mientras no haya tinta en el campo ni el raton se mueva, la simulacion no
+    // tiene nada que calcular. Importa en el movil, donde pointermove no llega
+    // nunca: sin esto se estarian recorriendo 16.384 celdas sesenta veces por
+    // segundo para no cambiar nada.
+    var campoVivo = false;
 
     addEventListener('pointermove', function(e){
       px = e.clientX / innerWidth;
@@ -1846,8 +1857,16 @@
       if (radio > 1e-5 && (Math.abs(cvx) + Math.abs(cvy)) > 0.01){
         var empuje = 100 * FL_INTENSIDAD * dt * 0.01;
         var tono = Math.min(10*f, 1);
-        for (y = 0; y < N; y++){
-          for (x = 0; x < N; x++){
+        // La mancha del cursor no pasa de unas veinte celdas de lado, asi que se
+        // recorre solo el rectangulo que la contiene en vez de la rejilla entera.
+        var rx = ar >= 1 ? 2*radio/ar : 2*radio;
+        var ry = ar >= 1 ? 2*radio : 2*radio*ar;
+        var ix0 = Math.max(0, Math.floor((px - rx)*N - 0.5));
+        var ix1 = Math.min(N-1, Math.ceil((px + rx)*N - 0.5));
+        var iy0 = Math.max(0, Math.floor((py - ry)*N - 0.5));
+        var iy1 = Math.min(N-1, Math.ceil((py + ry)*N - 0.5));
+        for (y = iy0; y <= iy1; y++){
+          for (x = ix0; x <= ix1; x++){
             var u = (x+0.5)/N, v = (y+0.5)/N;
             var dx = ar >= 1 ? (u - px)*ar : u - px;
             var dy = ar >= 1 ? v - py : (v - py)/ar;
@@ -1863,19 +1882,21 @@
         }
       }
 
+      campoVivo = false;
       for (k = 0; k < N*N; k++){
         k2 = k*2;
         var a = velNueva[k2], b = velNueva[k2+1], t = tintaNueva[k];
         a = a < -1 ? -1 : (a > 1 ? 1 : a);
         b = b < -1 ? -1 : (b > 1 ? 1 : b);
         t = t < 0 ? 0 : (t > 1 ? 1 : t);
+        if (t > 0.002) campoVivo = true;
         vel[k2] = a; vel[k2+1] = b; tinta[k] = t;
         bytes[k*4]   = (a*0.5 + 0.5) * 255;
         bytes[k*4+1] = (b*0.5 + 0.5) * 255;
         bytes[k*4+2] = t * 255;
       }
 
-      ultimaPx = px; ultimaPy = py;
+      ultimaPx = px; ultimaPy = py; movio = false;
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, texCampo);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, N, N, 0, gl.RGBA, gl.UNSIGNED_BYTE, bytes);
@@ -1913,11 +1934,19 @@
     function cuadro(ahora){
       requestAnimationFrame(cuadro);
       if (document.hidden) return;
-      if (ahora - anterior < 33) return;          // ~30 por segundo, de sobra
+      // Se dibuja en cada cuadro. Antes se saltaba a 30 por segundo pero el dt
+      // se seguia limitando a 16 ms, asi que a la simulacion le llegaba la mitad
+      // del tiempo que habia pasado de verdad y el fluido corria a media
+      // velocidad. El limite se queda porque protege de un salto largo (volver a
+      // una pestaña que estaba de fondo), pero ya casi nunca recorta.
       var dt = Math.min((ahora - anterior)/1000, 0.016);
       anterior = ahora;
       reloj += dt * AUR_VELOCIDAD;
-      simular(dt);
+      if (campoVivo || movio) simular(dt);
+      // Con la simulacion parada hay que seguir anotando donde esta el cursor.
+      // Si no, al volver a moverse la velocidad se calcularia contra una posicion
+      // vieja y saldria un pegote de tinta de golpe.
+      else { ultimaPx = px; ultimaPy = py; svx = 0; svy = 0; }
       pintar();
     }
 
