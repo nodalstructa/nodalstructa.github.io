@@ -387,6 +387,8 @@
   .wide figure{margin:0;padding:0;background:#fff;border-right:1px solid var(--rule);
     display:flex;align-items:center;min-width:0;}
   .wide video{width:100%;height:auto;display:block;background:#fff;}
+  .wide figure img{width:100%;height:auto;display:block;}
+  .wide .specs{margin:0 0 16px;}
   .wide .body{padding:26px 30px;min-width:0;display:flex;flex-direction:column;}
   .wide p{margin:0 0 14px;color:var(--ink-soft);font-size:14.8px;}
   .wide .tag{margin-top:auto;margin-bottom:0;font-family:var(--mono);font-size:11px;
@@ -844,6 +846,54 @@
     <article class="feature flip">
       <div class="shots">
         <figure>
+          <video class="loop" loop muted playsinline autoplay preload="none" poster="assets/loop_div_poster.webp"
+                 data-src="assets/loop_div.mp4"></video>
+          <figcaption><span class="es">Chapa entera, 1 clic</span><span class="en">Whole plate, 1 click</span></figcaption>
+        </figure>
+        <figure>
+          <div class="vwrap">
+            <video controls playsinline preload="none" poster="assets/poster_div.webp">
+              <source src="assets/video_div.mp4" type="video/mp4">
+            </video>
+            <button type="button" class="expand">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M9 4H4v5M15 4h5v5M20 15v5h-5M4 15v5h5"/>
+              </svg>
+              <span class="sr es">Ampliar</span><span class="sr en">Expand</span>
+            </button>
+          </div>
+          <figcaption><span class="es">Componente en uso</span><span class="en">Component in use</span></figcaption>
+        </figure>
+      </div>
+      <div class="body">
+        <p class="mark"><b class="mac">MAC</b> <span class="es">Aplicación con diálogo propio · pisos</span><span class="en">Application with its own dialog · floors</span></p>
+        <h3><span class="es">Dividir pisos</span><span class="en">Floor plate splitter</span></h3>
+        <p>
+          <span class="es">Parte una chapa lagrimada entera en piezas de formato comercial, con las juntas sobre
+          las vigas que la apoyan. Las piezas conservan sus cortes, chaflanes y atributos de usuario, y desde la
+          misma ventana se puede rehacer con otro formato o deshacer y recuperar la chapa original. Una herramienta
+          complementaria hace después las ranuras en las juntas para la soldadura en obra.</span>
+          <span class="en">Splits a whole checker plate into commercial-size pieces, with every joint landing on
+          the beams that support it. The pieces keep their cuts, chamfers and user attributes, and from the same
+          dialog you can redo it with another size or undo it and get the original plate back. A companion tool
+          then adds the slots along the joints for site welding.</span>
+        </p>
+        <ul class="specs">
+          <li><b><span class="es">Formatos</span><span class="en">Sizes</span></b><span class="es">Comerciales o a medida</span><span class="en">Standard or custom</span></li>
+          <li><b><span class="es">Juntas</span><span class="en">Joints</span></b><span class="es">Sobre vigas, con holgura ajustable</span><span class="en">Over beams, adjustable gap</span></li>
+          <li><b><span class="es">Conserva</span><span class="en">Keeps</span></b><span class="es">Cortes · chaflanes · atributos</span><span class="en">Cuts · chamfers · attributes</span></li>
+          <li><b><span class="es">Ranuras</span><span class="en">Slots</span></b><span class="es">En las juntas, para soldar en obra</span><span class="en">Along the joints, for site welding</span></li>
+        </ul>
+        <figure>
+          <img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAALABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDVluGYyDPGKpKxLDJq2yjLcVCFAPSuHEO0jaGwuKKDRXNcs//Z) center/cover no-repeat" src="assets/res_div.webp" data-full="assets/res_div-full.webp" alt="Planta de chapa lagrimada dividida en piezas de formato comercial en Tekla Structures, y detalle de las ranuras en las juntas">
+          <figcaption><span class="es">Resultado en el modelo</span><span class="en">Result in the model</span></figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="shots">
+        <figure>
           <video class="loop" loop muted playsinline autoplay preload="none" poster="assets/loop_ba_poster.webp"
                  data-src="assets/loop_ba.mp4"></video>
           <figcaption><span class="es">Barandilla, 2 clics</span><span class="en">Railing, 2 clicks</span></figcaption>
@@ -1069,25 +1119,27 @@
 
     <article class="wide">
       <figure>
-        <video class="loop" loop muted playsinline autoplay preload="none" poster="assets/loop_chapa_poster.webp"
-               data-src="assets/loop_chapa.mp4"
-               aria-label="Animación de una planta de chapa lagrimada en Tekla: primero la placa entera, después cortada a medidas comerciales, y por último con sus ranuras y agujeros"></video>
+        <img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAGABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDol35ILUp3Z+9RRQhMcAwHWiiigR//2Q==) center/cover no-repeat" src="assets/armado_curvo.webp" data-full="assets/armado_curvo-full.webp" alt="Las cuatro macros de armado sobre un tramo de muro curvo: separador con su solape, detalle de extremo con ganchos, modificador de propiedad y refuerzo de abertura con barras verticales y curvas">
       </figure>
       <div class="body">
-        <p class="mark"><b class="mac">MAC</b> <span class="es">Tres macros encadenadas</span><span class="en">Three chained macros</span></p>
-        <h3><span class="es">Chapa lagrimada</span><span class="en">Checker plate</span></h3>
+        <p class="mark"><b class="mac">MAC</b> <span class="es">Cuatro macros · muros curvos</span><span class="en">Four macros · curved walls</span></p>
+        <h3><span class="es">Armado en muros curvos</span><span class="en">Curved wall reinforcement</span></h3>
         <p>
-          <span class="es">Una planta entera resuelta en tres pasos. Primero se corta la placa a medidas
-          comerciales, apoyando cada corte en las vigas de debajo para que ninguna junta quede al aire.
-          Después se hacen las ranuras de una o varias placas de una pasada. Y por último se reparten los
-          agujeros de soldadura, comprobando cada posición contra el sólido real de la placa, así que no
-          perfora sobre huecos ni cortes.</span>
-          <span class="en">A whole floor resolved in three steps. First the plate is cut to commercial sizes,
-          landing every cut on a beam below so no joint is left unsupported. Then the slots are made across one
-          or many plates in a single pass. Finally the welding holes are laid out, each position tested against
-          the plate's real solid, so it never drills over openings or cuts.</span>
+          <span class="es">En silos y depósitos las herramientas de Tekla piensan en muros planos: un separador
+          dibujado en alzado solo corta la barra que toca, y no hay componente para reforzar un hueco en un muro
+          curvo. Estas macros trabajan sobre el anillo completo: localizan la cara del hormigón, ordenan las barras
+          por ángulo y saltan las puertas.</span>
+          <span class="en">In silos and tanks, Tekla's tools assume flat walls: a splitter drawn in elevation only
+          cuts the bar it touches, and there is no component to reinforce an opening in a curved wall. These macros
+          work on the whole ring: they find the concrete face, order the bars by angle and skip the doors.</span>
         </p>
-        <p class="tag"><span class="es">Distribuidas como instaladores TSEP</span><span class="en">Shipped as TSEP installers</span></p>
+        <ul class="specs">
+          <li><b><span class="es">Separador</span><span class="en">Splitter</span></b><span class="es">Corta todo el anillo a una cota, con el solape arriba, abajo o centrado</span><span class="en">Splits the whole ring at a level, lap above, below or centred</span></li>
+          <li><b><span class="es">Extremos</span><span class="en">Bar ends</span></b><span class="es">Ganchos y patillas hacia dentro o fuera del muro</span><span class="en">Hooks bent into or out of the wall</span></li>
+          <li><b><span class="es">Propiedades</span><span class="en">Properties</span></b><span class="es">Cambia tamaño, calidad o clase desde una cota</span><span class="en">Changes size, grade or class from a level</span></li>
+          <li><b><span class="es">Aberturas</span><span class="en">Openings</span></b><span class="es">Verticales y curvas alrededor del hueco, medidas y corregidas</span><span class="en">Vertical and curved bars around the opening, measured and corrected</span></li>
+        </ul>
+        <p class="tag"><span class="es">Cara exterior, interior o ambas</span><span class="en">Outer face, inner face or both</span></p>
       </div>
     </article>
 
