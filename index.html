@@ -283,50 +283,54 @@
     position:relative;min-width:0;
   }
   /* one slide per image; the track scroll-snaps and the dots below drive it */
-  .prj .track{
+  :is(.prj,.carrusel) .track{
     display:flex;overflow-x:auto;scroll-snap-type:x mandatory;
     scrollbar-width:none;-ms-overflow-style:none;
   }
-  .prj .track::-webkit-scrollbar{display:none;}
-  .prj .slide{
+  :is(.prj,.carrusel) .track::-webkit-scrollbar{display:none;}
+  :is(.prj,.carrusel) .slide{
     flex:0 0 100%;scroll-snap-align:center;
     aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;
     padding:14px;min-width:0;
   }
-  .prj .slide img{max-width:100%;max-height:100%;width:auto;height:auto;display:block;}
-  .prj .dots{
+  /* el mismo carrusel dentro de una ficha de componente, con capturas apaisadas */
+  .carrusel .box{position:relative;min-width:0;}
+  .carrusel .slide{aspect-ratio:5/2;padding:0;}
+  .carrusel .dots{padding:12px 0 0;}
+  :is(.prj,.carrusel) .slide img{max-width:100%;max-height:100%;width:auto;height:auto;display:block;}
+  :is(.prj,.carrusel) .dots{
     display:flex;justify-content:center;gap:7px;
     padding:0 0 12px;background:#fff;
   }
-  .prj .dots button{
+  :is(.prj,.carrusel) .dots button{
     width:8px;height:8px;padding:0;border-radius:50%;cursor:pointer;
     border:1px solid #9aa4af;background:transparent;
   }
-  .prj .dots button[aria-current="true"]{background:#47535f;border-color:#47535f;}
-  .prj .dots button:focus-visible{outline:2px solid var(--rust);outline-offset:2px;}
-  .prj .count{
+  :is(.prj,.carrusel) .dots button[aria-current="true"]{background:#47535f;border-color:#47535f;}
+  :is(.prj,.carrusel) .dots button:focus-visible{outline:2px solid var(--rust);outline-offset:2px;}
+  :is(.prj,.carrusel) .count{
     position:absolute;top:10px;right:10px;
     font-family:var(--mono);font-size:10px;letter-spacing:.1em;
     color:#fff;background:rgba(16,23,32,.6);padding:3px 7px;
     font-variant-numeric:tabular-nums;pointer-events:none;
   }
-  .prj .nav{
+  :is(.prj,.carrusel) .nav{
     position:absolute;top:0;bottom:0;width:44px;z-index:2;
     display:flex;align-items:center;justify-content:center;
     border:0;background:transparent;padding:0;cursor:pointer;
   }
-  .prj .nav.prev{left:0;}
-  .prj .nav.next{right:0;}
-  .prj .nav i{
+  :is(.prj,.carrusel) .nav.prev{left:0;}
+  :is(.prj,.carrusel) .nav.next{right:0;}
+  :is(.prj,.carrusel) .nav i{
     display:flex;align-items:center;justify-content:center;
     width:30px;height:30px;
     background:rgba(16,23,32,.62);border:1px solid rgba(255,255,255,.32);
     color:#fff;opacity:.5;transition:opacity .15s;
   }
-  .prj:hover .nav i,.prj .nav:focus-visible i{opacity:1;}
-  .prj .nav[disabled]{cursor:default;}
-  .prj .nav[disabled] i{opacity:.15;}
-  .prj .nav:focus-visible{outline:2px solid var(--rust);outline-offset:-4px;}
+  :is(.prj,.carrusel):hover .nav i,:is(.prj,.carrusel) .nav:focus-visible i{opacity:1;}
+  :is(.prj,.carrusel) .nav[disabled]{cursor:default;}
+  :is(.prj,.carrusel) .nav[disabled] i{opacity:.15;}
+  :is(.prj,.carrusel) .nav:focus-visible{outline:2px solid var(--rust);outline-offset:-4px;}
   .chev{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;
         stroke-linecap:round;stroke-linejoin:round;}
   .prj .slide img,.feature figure img,
@@ -938,8 +942,14 @@
           <li><b><span class="es">Rodapié</span><span class="en">Toe plate</span></b><span class="es">Pletina 100×4, opcional</span><span class="en">Flat 100×4, optional</span></li>
           <li><b><span class="es">Alturas</span><span class="en">Heights</span></b><span>1100 / 500 mm</span></li>
         </ul>
-        <figure>
-          <img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAHABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDZ/tMZwASakhu2lfBXAooqnFEoshsDk0UUUij/2Q==) center/cover no-repeat" src="assets/dlg_barandillas.webp" srcset="assets/dlg_barandillas.webp 1x, assets/dlg_barandillas-2x.webp 1.84x" data-full="assets/dlg_barandillas-full.webp" alt="Barandilla acotada en Tekla mostrando los perfiles Ø42.4×3, Ø33.7×3, L60×6 y PL100×4, junto al diálogo de parámetros del componente">
+        <figure class="carrusel">
+          <div class="box">
+            <div class="track">
+              <div class="slide"><img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAHABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDZ/tMZwASakhu2lfBXAooqnFEoshsDk0UUUij/2Q==) center/cover no-repeat" src="assets/dlg_barandillas.webp" srcset="assets/dlg_barandillas.webp 1x, assets/dlg_barandillas-2x.webp 1.84x" data-full="assets/dlg_barandillas-full.webp" alt="Barandilla acotada en Tekla mostrando los perfiles Ø42.4×3, Ø33.7×3, L60×6 y PL100×4, junto al diálogo de parámetros del componente"></div>
+              <div class="slide"><img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAAJABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDbbUYQcF6adSh9z+FYo/1h+tWoqvkRF2aA1CM9AfyoqEdKKnkRWp//2Q==) center/cover no-repeat" src="assets/bar2.webp" srcset="assets/bar2.webp 1x, assets/bar2-2x.webp 1.84x" data-full="assets/bar2-full.webp" alt="Barandilla de tubo sobre viga con dos pasamanos intermedios, montantes con placa base y rodapié corrido"></div>
+              <div class="slide"><img loading="lazy" decoding="async" style="background:#fff url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABcQERQRDhcUEhQaGBcbIjklIh8fIkYyNSk5UkhXVVFIUE5bZoNvW2F8Yk5QcptzfIeLkpSSWG2grJ+OqoOPko3/2wBDARgaGiIeIkMlJUONXlBejY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY3/wAARCAALABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDcOoIM7nFMOooegZvoKrQxJ5r/ACirIUDoBT5V1FqLHeqy55HsaKTavoKKXIg1P//Z) center/cover no-repeat" src="assets/bar3.webp" srcset="assets/bar3.webp 1x, assets/bar3-2x.webp 1.84x" data-full="assets/bar3-full.webp" alt="Barandilla de tubo rodeando una plataforma por tres lados, con codos en las esquinas y extremos curvos, sobre vigas"></div>
+            </div>
+          </div>
           <figcaption><span class="es">Resultado en el modelo</span><span class="en">Result in the model</span></figcaption>
         </figure>
       </div>
@@ -2167,7 +2177,7 @@
 
     // Project sliders. Dots, arrows and the counter are built here rather than
     // written into the markup, so adding or removing a slide needs no other edit.
-    document.querySelectorAll('.prj .box').forEach(function(box){
+    document.querySelectorAll('.prj .box, .carrusel .box').forEach(function(box){
       var track = box.querySelector('.track');
       if (!track) return;
       var slides = track.querySelectorAll('.slide');
